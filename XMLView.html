@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC>
+<html lang="en">
+<head>
+
+<title>XML Viewer</title>
+<meta charset="utf-8" />
+<meta name="description" content="View XML Notes"/>
+<meta name="keywords" content=""/>
+<meta name="author" content="Tristyn"/>
+
+<link rel="icon" type="image/png" href="PoI/poi.ico">
+
+
+<style type="text/css"> @import "Moar/Style.css"; </style>
+<script type="text/javascript" src="Moar/JScript.js"></script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!--OutLine: $$ $$ InLine: \( \) -->
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({ TeX: { extensions: ["color.js"] }}); </script>
+<!-- \definecolor{ColorName}{RBG}{###,###,###}  \color{ColorName} -->
+
+</head>
+<body class="main" onload="ViewOnLoad()"><img src="PoI/PoIB.png" id="Logo" Class="HM" />
+<div id="Wrapper" class="mid">
+
+<!-- Heading -->
+<table class="Three"><tr><td><!-- Left -->
+
+</td><td><!-- Center -->
+
+<h1 id="MainTitle">XML Viewer</h1>
+
+</td><td><!-- Right -->
+
+<a title="References" href="42.html">[42]</a> 
+<input type="checkbox" id="SetCheck" onclick="SHIDbCheck('Settings','SetCheck');" title="Settings?"><br>
+
+<table id="Pointer" class="H"><tr>
+<td><input type="text" placeholder="http://www.mysite.me/folder/.../folder/mydoc.xml" id="URLIdIn" onkeypress="XMLGetter(event);" /></td>
+<td><input type="text" placeholder="01/01" id="NumIdIn" onkeypress="XMLGetter(event);" /></td>
+</tr></table>
+
+</td></tr></table>
+
+<div id="Settings" Class="H box mbox">
+<input type="checkbox" id="PointCheck" onclick="SHIDbCheck('Pointer','PointCheck');"> Pointer <br>
+<input type="checkbox" id="VarsCheck" onclick="SHIDbCheck('VarTable','VarsCheck');"> List Vars <br>
+<input type="checkbox" id="NotesCheck" onclick="SHIDbCheck('NoteTable','NotesCheck');"> List Notes <br>
+<input type="checkbox" id="TagsCheck" onclick="SHIDiCheck('TagDiv','TagsCheck');"> List Tags <br>
+<a onclick="MathJax.Hub.Queue(['Typeset',MathJax.Hub]);">Update Math</a>
+</div>
+
+<hr class="mbox">
+
+<!-- Src -->
+<table id="SrcTable" class="mid center"><tr><td>
+<img class="box mid" src="" id="SrcImg" />
+<div class="H" id="SrcMath"></div>
+</td></tr></table>
+
+
+<br>
+
+<!-- Variables & Notes -->
+<table id="VarNoteTable" class="fat"><tr><td>
+
+<table id="VarTable" class="fat plrbox">
+<tr><td colspan=2 class="MiniTitle">&nbsp;Variables</td></tr>
+<tr><td class="var">...</td><td class="varExp">... ... ...</td></tr>
+</table>
+
+</td><td>
+
+<table id="NoteTable" class="fat plrbox">
+<tr><td class="MiniTitle">&nbsp;Notes</td></tr>
+<tr><td class="note">... ... ... ... ... ... ...</td></tr>
+</table>
+
+</td></tr></table>
+
+
+<br>
+<br>
+
+<!-- Tags -->
+<div id="TagDiv" class="H"><h2 class="MiniTitle">Tags</h2>:</div>
+
+
+<div id="demo"></div>
+
+</div>
+</body>
+</html>

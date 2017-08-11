@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC>
+<html lang="en">
+<head>
+
+<title>XML Listing</title>
+<meta charset="utf-8" />
+<meta name="description" content="List XML Notes"/>
+<meta name="keywords" content=""/>
+<meta name="author" content="Tristyn"/>
+
+<link rel="icon" type="image/png"  href="PoI/poi.ico">
+
+<style type="text/css"> @import "Moar/Style.css"; </style>
+<script type="text/javascript" src="Moar/JScript.js"></script>
+
+</head>
+<body class="main" onload="ListOnLoad();"><img src="PoI/PoIB.png" height="148px" width="148px" id="Logo" Class="HM" />
+<div id="Wrapper" class="mid">
+
+<!-- Heading -->
+<table class="Three"><tr><td><!-- Left -->
+
+</td><td><!-- Center -->
+
+<h1 id="MainTitle">XML Listing</h1>
+
+</td><td><!-- Right -->
+
+<a title="References" href="42.html">[42]</a> 
+<input type="checkbox" id="SetCheck" onclick="SHIDbCheck('Settings','SetCheck');" title="Settings?">
+<br>
+<input type="text" placeholder="http://www.mysite.me/folder/.../folder/mydoc.xml" id="URLIdIn" onkeypress="if(Enter(event)){refLister();}" />
+
+</td></tr></table>
+
+
+<div id="Settings" Class="H box mbox">
+<input type="checkbox" name="Point" id="PointCheck" onclick="SHIDbCheck('URLIdIn','PointCheck');"> Pointer <br>
+<input type="checkbox" name="Tags" id="TagsCheck" onclick="SHCbCheck('tag','TagsCheck');"> List Tags
+</div>
+
+<hr class="mbox">
+
+<table class="Two" id="RefListTable">
+<tr><td><b>Name:</b></td><td class="tag"><b>Tags:</b></td></tr>
+
+</table>
+
+
+<div id="demo"></div>
+
+
+<br>
+</div>
+</body>
+</html>
