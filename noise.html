@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC>
+<html><head>
+	<style type="text/css">
+		*{margin: 0; padding: 0; border-spacing: 0; border-collapse: collapse; border: none; background: none;}
+		#Controls{
+			width:      15em;
+			text-align: center;
+			margin:     0 auto 0 auto;
+			}
+		img[id^="Thunder"]{
+			width:      5em;
+			cursor: 	pointer;
+			margin:     0 auto 0 auto;
+			position: absolute;
+			transform: translateX(-50%);
+			}
+		#volume{
+			margin:     4em auto 0 auto;
+			}
+		
+	</style>
+</head><body>
+<div id="test"></div>
+
+<div id="Controls">
+<img src="http://i.imgur.com/3zIQbAu.png"  id="ThunderOn" style="display:none;"><img src="http://i.imgur.com/MtiA9Hr.png" id="ThunderOff">
+<br>
+<input id="volume" type="range" min="0" max="10">
+</div>
+
+<audio id="b1" autoplay loop><source src="SmoothedBrownNoise.mp3" type="audio/mpeg"></audio>
+
+
+
+
+<audio id="r0"  ><source src="rain/0.mp3" type="audio/mpeg"></audio>
+<audio id="r1"  ><source src="rain/1.mp3" type="audio/mpeg"></audio>
+<audio id="r2"  ><source src="rain/2.mp3" type="audio/mpeg"></audio>
+<audio id="r3"  ><source src="rain/3.mp3" type="audio/mpeg"></audio>
+<audio id="r4"  ><source src="rain/4.mp3" type="audio/mpeg"></audio>
+<audio id="r5"  ><source src="rain/5.mp3" type="audio/mpeg"></audio>
+<audio id="r6"  ><source src="rain/6.mp3" type="audio/mpeg"></audio>
+<audio id="r7"  ><source src="rain/7.mp3" type="audio/mpeg"></audio>
+<audio id="r8"  ><source src="rain/8.mp3" type="audio/mpeg"></audio>
+<audio id="r9"  ><source src="rain/9.mp3" type="audio/mpeg"></audio>
+<audio id="r10" ><source src="rain/10.mp3" type="audio/mpeg"></audio>
+<audio id="r11" ><source src="rain/11.mp3" type="audio/mpeg"></audio>
+<audio id="r12" ><source src="rain/12.mp3" type="audio/mpeg"></audio>
+<audio id="r13" ><source src="rain/13.mp3" type="audio/mpeg"></audio>
+<audio id="r14" ><source src="rain/14.mp3" type="audio/mpeg"></audio>
+
+</body>
+<script>
+var thunder = false;
+document.getElementById("ThunderOn" ).addEventListener("click", toggleThunder);
+document.getElementById("ThunderOff").addEventListener("click", toggleThunder);
+
+function toggleThunder(){
+	if(thunder){
+		document.getElementById("ThunderOn"  ).style.display = "none";
+		document.getElementById("ThunderOff" ).style.display = "inline-block";
+		thunder = false;
+		}
+	else{
+		document.getElementById("ThunderOn"  ).style.display = "inline-block";
+		document.getElementById("ThunderOff" ).style.display = "none";
+		thunder = true;
+		document.getElementById("r0").play();
+		}
+	}
+
+
+document.getElementById("volume").addEventListener("click", changeVolume);
+changeVolume();
+function changeVolume(){
+	for(var i=0; i<15; i++){
+		document.getElementById("r"+i).volume = (document.getElementById("volume").value/10.0);
+		}
+	}
+
+for(var i=0; i<15; i++){document.getElementById("r"+i).addEventListener("ended", nextThunder);}
+function nextThunder(){if(thunder){
+	var n = Math.round(Math.random()*14);
+	document.getElementById("test").innerHTML = n;
+	document.getElementById("r"+n).play();
+	}}
+
+</script>
+
+
+
+</html>
+
+

@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC>
+<html><head>
+
+<script type="text/javascript" src="https://pomax.github.io/svg-path-reverse/reverse.js"></script>
+
+</head><body>
+<div id="demo"></div>
+<script>
+document.getElementById("demo").innerHTML = "a";
+
+//var reverse = utils.reverse,
+//    normalize = utils.normalize;
+
+
+var path ="m0 0l10 0 0 10 -10 0z";
+document.getElementById("demo").innerHTML = "b";
+var normalized = normalizePath(path);
+var reversed = reverseNormalizedPath(normalized);
+
+
+document.getElementById("demo").innerHTML = "c";
+document.getElementById("demo").innerHTML = reversed;
+</script>
+</body></html>

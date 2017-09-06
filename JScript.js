@@ -45,6 +45,19 @@ function UncheckID(id){document.getElementById(id).checked = false;}
 //XMLDis
 	function loadXMLDoc(filename){if (window.XMLHttpRequest){xhttp=new XMLHttpRequest();} else {xhttp=new ActiveXObject("Microsoft.XMLHTTP");} xhttp.open("GET",filename,false); xhttp.send(); return xhttp.responseXML;}
 
+function DecAsciiShiftCypherEnDecode(Shift,Str){
+	if(Shift>0){Shift = Shift - Math.floor(Shift/255)*255;}
+	if(Shift<0){Shift = Shift - Math.ceil(Shift/255)*255;}
+	var StrInt; var newStr="";
+	for(var i=0;i<Str.length;i++){
+		StrInt = Str.charCodeAt(i) + Shift;
+		if(StrInt>255){StrInt=StrInt-255;}
+		if(StrInt<0){StrInt=StrInt+255;}
+		newStr = newStr+String.fromCharCode(StrInt)
+		}
+	return newStr;
+	}
+
 
 
 //This Site
