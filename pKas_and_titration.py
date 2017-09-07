@@ -45,28 +45,70 @@ def strong_base_titration(pKa, pH, total_acid_concentration, acid_volume, titrat
         
     return pKa + math.log(new_a_concentration/new_ha_concentration,10)
 
+
+
 def make_titration_curve(pKas, total_acid_concentration, acid_volume, titrate_step, titrate_concentration):
     # Assumes pKas is ordered least to greatest
+    normalization = []
     with open('titration_curve.txt', 'w+') as f:
         pH = 0
         total_sum = 0
+        my_pka = pKas[0]
         for num in range(0,900):
-            choice = pKas[0]
+            
             for pKa in pKas:
-                if(math.fabs(pH - pKa) < math.fabs(pH - choice)):
-                    choice = pKa
+                if(math.fabs(pH - pKa) < math.fabs(pH - my_pka)):
+                   my_pka = pKa
+                   normalization.append(total_sum + titrate_step)
             
             total_sum = total_sum + titrate_step
-            new_pH = strong_base_titration(choice, pH, total_acid_concentration, acid_volume, titrate_step, titrate_concentration)
+            new_pH = strong_base_titration(my_pka, pH, total_acid_concentration, acid_volume, titrate_step, titrate_concentration)
+            
             if(new_pH != None):
                 pH = new_pH
+                f.write("{0}\t{1}\n".format(total_sum,pH))
             else:
-                print(total_sum)
-                break
-            
-            f.write("{0}\t{1}\n".format(total_sum,pH))
+                if(pKas.index(my_pka) < len(pKas)-1):
+                    my_pka = pKas[pKas.index(my_pka)+1]
+                    pH = strong_base_titration(my_pka, pH, total_acid_concentration, acid_volume, titrate_step, titrate_concentration)
+                    f.write("{0}\t{1}\n".format(total_sum,pH))
+                else:
+                    break
+        f.close()
+    for norm in normalization:
+        print(norm)
+        # Pick Start of Normalization
+        my_num = 0
+        whole_num = math.floor(norm)
+        half_num = whole_num + 0.5
+        if(math.fabs(whole_num - norm) < math.fabs(half_num - norm)):
+            my_num = whole_num
+        else:
+            my_num = half_num
+        
+        new_file_str = ""
+        with open('titration_curve.txt', 'r') as file:
+            line = file.readline()
+            while(line != ""):
+                tab_index = line.find("\t")
+                line_number = float(line[:tab_index])
+                line_end = line[tab_index:]
+                if(line_number > my_num):
+                    if(line_number < my_num+0.5):
+                        # Fix Line Number by Normalization
+                        line_number = (line_number-my_num)*0.5/(norm-my_num)+my_num
+                    else:
+                        # Fix Line Number by Shift
+                        line_number = line_number-norm+my_num
+                new_line = "{0}".format(line_number)+line_end
+                new_file_str= new_file_str+new_line
+                line = file.readline()
+        f = open('titration_curve.txt', 'w+')
+        f.write(new_file_str)
+        f.close()
 
-pkas = [1.82,6,9.2]
+
+pkas = [2.2,8.9,10.3]
 make_titration_curve(pkas,TOTAL_ACID_CONCENTRATION,ACID_VOLUME,STRONG_BASE_TITRATE_VOLUME,STRONG_BASE_TITRATE_CONCENTRATION)
 
 
