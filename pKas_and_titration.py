@@ -4,8 +4,8 @@ import math
 PKA                                 = 6
 PH                                  = 0
 TOTAL_ACID_CONCENTRATION            = 1
-ACID_VOLUME                         = 50
-STRONG_BASE_TITRATE_VOLUME          = 0.001
+ACID_VOLUME                         = 1
+STRONG_BASE_TITRATE_VOLUME          = 0.0035
 STRONG_BASE_TITRATE_CONCENTRATION   = 1
 
 
@@ -49,19 +49,22 @@ def make_titration_curve(pKas, total_acid_concentration, acid_volume, titrate_st
     # Assumes pKas is ordered least to greatest
     with open('titration_curve.txt', 'w+') as f:
         pH = 0
+        total_sum = 0
         for num in range(0,900):
             choice = pKas[0]
             for pKa in pKas:
                 if(math.fabs(pH - pKa) < math.fabs(pH - choice)):
                     choice = pKa
             
-            new_pH = strong_base_titration(choice, pH, total_acid_concentration, acid_volume, titrate_step*num, titrate_concentration)
+            total_sum = total_sum + titrate_step
+            new_pH = strong_base_titration(choice, pH, total_acid_concentration, acid_volume, titrate_step, titrate_concentration)
             if(new_pH != None):
                 pH = new_pH
             else:
+                print(total_sum)
                 break
             
-            f.write("{0}\t{1}\n".format(titrate_step*num,pH))
+            f.write("{0}\t{1}\n".format(total_sum,pH))
 
 pkas = [1.82,6,9.2]
 make_titration_curve(pkas,TOTAL_ACID_CONCENTRATION,ACID_VOLUME,STRONG_BASE_TITRATE_VOLUME,STRONG_BASE_TITRATE_CONCENTRATION)
