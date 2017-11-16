@@ -1,0 +1,54 @@
+#logoBox{
+	position: absolute;
+	top: 30%;
+	right: 50%;
+	bottom: 0;
+	left:50%;
+	transform: translateX(-50%);
+	}
+#logoBox a{
+	color:#888888;
+	}
+#logoBox #found{
+	font-family: "Courier New", Monospace;
+	font-weight: bold;
+	padding-left: 0.5em; padding-right: 0.35em;
+	border-right: 1px solid #888888;
+	display:none;
+	color: #007500;
+	}
+#logoBox #found:hover{
+	background-color:rgba(0,#255,0,0.1);	text-shadow: 0 0 2px #99ff99;
+	}
+#logoBox #not_found{
+	font-family: "Courier New", Monospace;
+	font-weight: bold;
+	padding-left: 0.5em; padding-right: 0.35em;
+	border-right: 1px solid #888888;
+	display:none;
+	color: #750000;
+	}
+#logoBox #not_found:hover{
+	background-color:rgba(#255,0,0,0.1);	text-shadow: 0 0 2px #ff9999;
+	}
+#logoBox #links{
+	padding-left: 0.15em;
+	}
+#logoBox img{width: 10em;height:10em;margin-right:1em;}
+#logoBox #Title{
+		font-size:3em;font-weight:bold;
+		text-align:center;vertical-align:bottom; 
+		height:1.5em;}
+#logoBox #search{
+		font-size:0.8em;
+		vertical-align:top;
+		}
+#logoBox #search input{font-size:1.3em; font-family:"Courier New", Courier, monospace;
+		padding:0.25em;padding-left:0.5em;
+		margin-bottom: 0.1em;
+		border-top: 1px solid #000000;
+		border-bottom: 1px solid #000000;
+		}
+body#PoI{
+	background-color:#fbfbfb;
+	}

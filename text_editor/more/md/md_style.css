@@ -1,0 +1,127 @@
+.markdown table{display: inline-table;}
+.markdown table tr td{padding:0.15em 0.29em 0.15em 0.29em; vertical-align:top;}
+
+.markdown blockquote{
+	display: block;
+	margin: 0.5em 1em 0.5em 0.5em;
+	border-left: 2px solid #666666;
+	padding-left: 0.5em;
+	}
+.markdown img{border:1px solid #aaaaaa;cursor:pointer;}
+.markdown .md{
+	height: 40em;  width: 80vw;
+	margin: 0 0 0 5vw;
+	background-color:rgba(245,245,245,1);
+	border: 1px solid #333333;
+	border-radius: 5%;
+	overflow: hidden;
+	position:absolute;
+	z-index:1000;
+	}
+.markdown .md > div{
+	height: 100%; 
+	width: 85vw;
+	overflow:scroll;
+	}
+
+.markdown H1{display:inline;} .markdown p>H1{margin-left:-1em;}
+.markdown H2{display:inline;} .markdown p>H2{margin-left:-1em;}
+.markdown H3{display:inline;} .markdown p>H3{margin-left:-1em;}
+.markdown H4{display:inline;} .markdown p>H4{margin-left:-1em;}
+.markdown H5{display:inline;} .markdown p>H5{margin-left:-1em;}
+.markdown H6{display:inline;} .markdown p>H6{margin-left:-1em;}
+
+.markdown a{																					cursor:pointer;									}
+.markdown .has_title{cursor:pointer;}
+.markdown sup{									vertical-align: top; 	font-size: 75%; 													}
+
+/* Lists */
+.markdown .pmElement{	margin-left:-1.9em;	vertical-align: top;	font-size: 55.6%;	cursor:pointer;	color:#888888;	padding:1px;	}
+.markdown ul ul{				margin-left:0.75em;																								}
+.markdown ul > li{			margin-left:0.75em;		list-style-type:none;	 list-style-position: inside;									}
+
+.markdown .plusNode{
+	cursor:pointer;
+	display:inline-block;
+	width: 1em; height: 1em; 
+	background-color:rgba(0,0,0,0);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 0.7em auto;
+	border-radius: 20%;
+	}
+.markdown .plusNode[data-isbig="0"]{ background-image: url("http://tristyn.me/more/images/plus.svg");  }
+.markdown .plusNode[data-isbig="1"]{ background-image: url("http://tristyn.me/more/images/minus.svg"); }
+
+
+.markdown img.0{vertical-align: middle; height: 0.95em;border: none; padding:0.25em; }
+.markdown img.1 ,video.1{width: 5em;  float: left;}
+.markdown img.2 ,video.2{width: 10em; float: left;}
+.markdown img.3 ,video.3{width: 15em; float: left;}
+.markdown img.4 ,video.4{width: 20em; float: left;}
+.markdown img.5 ,video.5{width: 25em; float: left;}
+.markdown img.6 ,video.6{width: 30em; float: left;}
+.markdown img.7 ,video.7{width: 35em; float: left;}
+.markdown img.8 ,video.8{width: 40em; float: left;}
+.markdown img.9 ,video.9{width: 45em; float: left;}
+.markdown img.100 ,video.100{width:100%;margin-top:-1em; float: left;cursor:default;}
+
+
+/* Math */
+
+	/* Title */
+	.markdown .math_title{
+		font-weight:bold;
+		text-align:center;
+		font-size:1.1em;
+		}
+
+	/* LaTeX */
+	.markdown .MathJax_Display{margin-top:0em !important; margin-bottom:0em !important; width: auto !important; text-align: center;}
+	.markdown .MathJax_Display .MathJax_FullWidth{ width: auto !important; margin: 0 auto !important; display: inline-block !important;}
+	.markdown .left_align .MathJax_Display{text-align: left !important;} 
+	
+	/* Hover Row Color */
+	.markdown table > tbody > tr > td.LateX:hover{background-color: #ffffff;}
+	.markdown table > tfoot > tr.label_row:hover{	background-color: #eeeeee;}
+	.markdown table > tfoot > tr.Var:hover{		background-color: #eeeeee;}
+
+	/* Checkboxes */
+	.markdown tfoot > tr.label_row > td > input[type=checkbox]{
+		-ms-transform:		scale(0.75);		/* IE */
+		-moz-transform:		scale(0.75);		/* FF */
+		-webkit-transform:	scale(0.75);		/* Safari and Chrome */
+		-o-transform:		scale(0.75);		/* Opera */
+		}
+
+	/* Label Row: Text Align & Default Display */
+	.markdown tfoot > tr.label_row{													display: none;	}
+	.markdown tfoot > tr.label_row > td > span.symbol{				text-align:center;					}
+	.markdown tfoot > tr.label_row > td > span.math_object{			text-align:center;	display: none;	}
+	.markdown tfoot > tr.label_row > td > span.unit{				text-align:center;					}
+	.markdown tfoot > tr.label_row > td > span.VarName{			text-align:center;					}
+	.markdown tfoot > tr.label_row > td > span.measurands{			text-align:center;	display: none;	}
+	.markdown tfoot > tr.label_row > td > span.dependencies{		text-align:center;	display: none;	}
+
+	/* Variable Rows: Text Align & Default Display */
+	.markdown tfoot > tr.Var{														display: none;	}
+	.markdown tfoot > tr.Var > td:nth-child(1){				text-align:center;					} /* Var symbol */
+	.markdown tfoot > tr.Var > td:nth-child(3){				text-align:center;					} /* Var unit   */
+	.markdown tfoot > tr.Var > td > span.symbol{				text-align:center;					}
+	.markdown tfoot > tr.Var > td > span.math_object{			text-align:center;	display: none;	}
+	.markdown tfoot > tr.Var > td > span.unit{				text-align:center;					}
+	.markdown tfoot > tr.Var > td > span.VarName{				text-align:center;					}
+	.markdown tfoot > tr.Var > td > span.measurands{			text-align:center;	display: none;	}
+	.markdown tfoot > tr.Var > td > span.dependencies{		text-align:center;	display: none;	}
+
+	/* Collapser */
+	.markdown tfoot > tr.Collapser{color:#888888;font-size:75%;text-align:right;cursor:pointer;}
+
+	/* Pop Up Alt Var Names */
+	.markdown .popUp_Content{display:none; background-color:#ffffff; margin-left: 1em; z-index:2; padding:0.25em;}
+	.markdown table.popUp_Content{border-collapse:collapse;}
+	.markdown table.popUp_Content tr td{padding:0.25em; text-align:center; border-bottom: 1px solid #aaaaaa; border-top: 1px solid #aaaaaa;}
+	.markdown table.popUp_Content tr:first-child td{border-top: none;}
+	.markdown table.popUp_Content tr:last-child td{border-bottom: none;}
+	.markdown .popUp_Trigger:hover .popUp_Content{display:block; color:#000000; border:1px solid #000000; position: absolute;}
+

@@ -1,0 +1,48 @@
+/* Background */
+body{overflow:hidden;background-color:#938873;}
+body::after{										/* Gears Background */	
+	content: "";
+	background:url(http://tristyn.me/more/images/gears.svg);
+	background-repeat: no-repeat;
+	background-size:cover;
+	opacity: 0.2;		
+	position: absolute;		z-index: -1;
+	top: 0;		left: 0;		bottom: 0;		right: 0;
+	}
+body::before{										/* Gears Background */	
+	-webkit-transform: rotate(180deg);
+	-moz-transform:    rotate(180deg);
+	-ms-transform:     rotate(180deg);
+	-o-transform:      rotate(180deg);
+	transform:         rotate(180deg);
+	content: "";
+	background:url(http://tristyn.me/more/images/gears.svg);
+	background-repeat: no-repeat;
+	background-size:cover;
+	opacity: 0.2;		
+	position: absolute;		z-index: -1;
+	top: 0;		left: 0;		bottom: 0;		right: 0;
+	}
+
+
+/* My iFrame */
+#myframe{						/*	Parent Container	*/
+	height:100%; width:63em;
+	text-align:center;
+	margin: 0 auto 0 auto;
+	background-color: #ffffff;
+	overflow: hidden;
+	border-left:1px solid #000000;
+	border-right:1px solid #000000;
+	}
+#myframe iframe{				/*	Child Container, Hides Scrollbar	*/
+	height:100%; width:64em;
+	}
+
+#tristyn{
+	font-size:0.8em;
+	position:absolute;
+	left: 0.5em;	bottom: 0.5em;
+	}
+#tristyn a{color:#666666;}
+#tristyn a:hover{background-color:rgba(0,0,200,0.03);	text-shadow: 0 0 0px #9999ff;}

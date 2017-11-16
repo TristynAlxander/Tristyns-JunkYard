@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC>
+<html><head><title>Tristyn*s Site</title>
+<link rel="icon" type="image/png" href="../more/images/poi.ico.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="../more/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../more/css/note.css" />
+<link rel="stylesheet" type="text/css" href="../more/md/md_style.css" />
+
+</head><body class="notes"><div id="subbody" class="markdown"></div><div id="test"></div></body>
+
+<!-- JS -->
+<script type="text/javascript" src="../more/md/md_math.js"></script>
+<script type="text/javascript" src="../more/md/md.js"></script>
+<script type="text/javascript">
+
+var mdFile;
+var cssFile;
+if(window.location.href.indexOf("?") == -1){mdFile = "index.md";}
+else if(window.location.href.indexOf("&") == -1){mdFile = window.location.href.substring(window.location.href.indexOf("?")+1);}
+else{
+	mdFile = window.location.href.substring(window.location.href.indexOf("?")+1,window.location.href.indexOf("&"));
+	cssFile = window.location.href.substring(window.location.href.indexOf("&")+1);
+	}
+
+var bodyNode = document.getElementById("subbody");
+while(bodyNode.childNodes.length > 0){bodyNode.removeChild(bodyNode.childNodes[0]);}
+
+var docstr;
+var dochttp;
+if (window.XMLHttpRequest){dochttp = new XMLHttpRequest();} else {dochttp = new ActiveXObject("Microsoft.XMLHTTP");}
+dochttp.onreadystatechange = function(){if (dochttp.readyState == 4 && dochttp.status == 200){
+	docstr = dochttp.responseText.toString();
+	
+	bodyNode.appendChild(document.createTextNode(docstr));
+	ProcessMarkdown(bodyNode);
+	
+	/* Optional Feature: Collapses UL's */
+	var pmElementArray = document.getElementsByClassName("pmElement");
+	for(var j=0; j<pmElementArray.length;j++){LTP_ClickCollapse(pmElementArray[j]);}
+	function LTP_ClickCollapse(tis){
+		pElement = tis.getElementsByClassName("pElement")[0];
+		mElement = tis.getElementsByClassName("mElement")[0];
+		
+		var firstUL;
+		var LIChildren = tis.parentElement.childNodes;
+		for(var i = 0; i<LIChildren.length; i++){
+			if(LIChildren[i].nodeName === "UL"){
+				firstUL = LIChildren[i];
+				break;
+				}
+			}
+		
+		if(pElement.style.display === "none"){
+			pElement.style.display = "inline";
+			mElement.style.display = "none";
+			firstUL.style.display = "none";
+			}
+		else{
+			mElement.style.display = "inline";
+			pElement.style.display = "none";
+			firstUL.style.display = "block";
+			}
+		}
+	
+	}}
+dochttp.open("GET", mdFile, true);
+dochttp.send(null);
+
+if(!(cssFile == null)){
+	var head  = document.getElementsByTagName('head')[0];
+	var link  = document.createElement('link');
+	link.rel  = 'stylesheet';
+	link.type = 'text/css';
+	link.href = cssFile;
+    head.appendChild(link);
+	}
+
+
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({"TeX": {Macros: {AA : "{\\unicode{x212B}}"}}, "HTML-CSS": {scale: 90}});</script>
+<!-- To Do: implement prism.js -->
+</html>
