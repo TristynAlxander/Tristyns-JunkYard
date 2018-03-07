@@ -18,6 +18,16 @@ def g(l,x):
     
 print(g("b",3))
 
+# Get Variable Name from File Name                                          # Get Variable Name from File Name
+#first_dot_index = file_name.find(".")                                       # Find the dot
+#if(not first_dot_index == -1):                                              # if there's a dot
+#    file_suffix = file_name[first_dot_index+1:]                             #   Isolate the suffix 
+#    var_prefix  = file_suffix.replace(".","_")                              #   Replace the dots
+#    root_name   = file_name[:first_dot_index]                               #   Isolate the root
+#    var_name    = var_prefix +"_"+ root_name                                #   Write as Human-Readable
+#    var_name    = var_name.upper()                                          #   Uppercase since these are westpa constants
+#else:                                                                       # if there's no dot
+#    var_name    = file_name                                                 #   Then there's just the root
 
 def position_under_constant_linear_acceleration( time, *args ):
 	print("point 2")
