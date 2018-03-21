@@ -79,7 +79,7 @@ def line_to_pdb_ter(line):
     return fields
 def pdb_ter_to_line(fields):
     line = (
-         "{0:<3.3}   ".format(fields[0])      # 0  ATOM
+         "{0:<3.3}   ".format(fields[0])      # 0  TER
         +"{0:>5.5}      ".format(fields[1])   # 1  Atom Serial Number
         +"{0:>3.3} ".format(fields[2])        # 2  Residue Name
         +"{0:<1.1}".format(fields[3])         # 3  Chain Identifier
