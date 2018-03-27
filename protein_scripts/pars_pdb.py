@@ -66,23 +66,7 @@ def print_atom_fields(fields):
     print("{0:<30.30}{1}".format("Element: "            , fields[14]))       # 14 Element Symbol
 
 def pdb_atom_to_line(fields):
-    line = (
-         "{0:<6.6}".format(fields[0])         # 0  ATOM
-        +"{0:>5.5} ".format(fields[1])        # 1  Atom Serial Number
-        +" {0:<3.3}".format(fields[2])        # 2  Atom Name
-        +"{0:<1.1}".format(fields[3])         # 3  Alternate Location Indicator
-        +"{0:>3.3} ".format(fields[4])        # 4  Residue Name
-        +"{0:<1.1}".format(fields[5])         # 5  Chain Identifier
-        +"{0:>4.4}".format(fields[6])         # 6  Residue Sequence Number
-        +"{0:<1.1}   ".format(fields[7])      # 7  Insertion Codes of Residues
-        +"{0:>8.7}".format(fields[8])         # 8  X Orthogonal A Coordinate
-        +"{0:>8.7}".format(fields[9])         # 9  Y Orthogonal A Coordinate
-        +"{0:>8.7}".format(fields[10])        # 10 Z Orthogonal A Coordinate
-        +"{0:>6.6}".format(fields[11])        # 11 Occupancy
-        +"{0:>6.6}      ".format(fields[12])  # 12 Temperature Factor
-        +"{0:>4.4}".format(fields[13])        # 13 Segment Identifier
-        +"{0:>2.2}".format(fields[14])        # 14 Element Symbol
-        )
+    line = "{0:<6.6}{1:>5.5}  {2:<3.3}{3:<1.1}{4:>3.3} {5:<1.1}{6:>4.4}{7:<1.1}    {8:>8.7}{9:>8.7}{10:>8.7}{11:>6.6}{12:>6.6}      {13:>4.4}{14:>2.2}".format(*fields)
     return line
 # TER
 def line_to_pdb_ter(line):
