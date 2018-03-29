@@ -1,0 +1,116 @@
+# Imports
+import pars_pdb
+import MDAnalysis
+import numpy as np
+
+# Imports for Main
+if (__name__ == "__main__"):
+    import os
+    import sys
+
+def dihedral_angle(a,b,c,d):
+    
+    # <ABC                                      # Difference between two points to form a vector in the plane
+    b_to_a         = np.subtract(b,a)           # Vector from b to a
+    b_to_c         = np.subtract(b,c)           # Vector from b to c
+    abc_norm_vec   = np.cross(b_to_a,b_to_c)    # Normal Vector to the plane
+    
+    # <BCD                                      # Difference between two points to form a vector in the plane
+    c_to_b         = np.subtract(c,b)           # Vector from c to b
+    c_to_d         = np.subtract(c,d)           # Vector from c to d
+    bcd_norm_vec   = np.cross(c_to_b,c_to_d)    # Normal Vector to the plane
+    
+    # Dihedral Angle                            # Angel between two planes equals angle between their normal vectors
+    #   \[ \vec{v} \cdot \vec{u} = |\vec{v}| |\vec{u}| \cos( \theta ) \]
+    #   \[ \theta = \arccos \left( \frac{\vec{v} \cdot \vec{u}}{|\vec{v}| |\vec{u}|}   \right ) \]
+    dihedral_angle = np.arccos(np.dot(bcd_norm_vec,abc_norm_vec)/(np.linalg.norm(bcd_norm_vec)*np.linalg.norm(abc_norm_vec)))
+    return dihedral_angle
+
+def get_phi_angle( psf, dcd, res_index ):
+    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+    
+    ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
+    atom_C0 = system.select_atoms("name C  and resid " + str(res_index-1))[0]               # 
+    atom_N  = system.select_atoms("name N  and resid " + str(res_index  ))[0]               # 
+    atom_CA = system.select_atoms("name CA and resid " + str(res_index  ))[0]               # 
+    atom_C1 = system.select_atoms("name C  and resid " + str(res_index  ))[0]               # 
+    
+    dihedral_angle_list = []                                                                # Assemble List of Dihedral Angles
+    for ts in system.trajectory:                                                            # 
+        dihedral_angle_list.append( dihedral_angle(atom_C0.position, atom_N.position, atom_CA.position, atom_C1.position) )
+    return dihedral_angle_list                                                              # 
+
+def get_psi_angle( psf, dcd, res_index ):
+    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+    
+    ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
+    atom_N  = system.select_atoms("name N  and resid " + str(res_index  ))[0]               # 
+    atom_CA = system.select_atoms("name CA and resid " + str(res_index  ))[0]               # 
+    atom_C0 = system.select_atoms("name C  and resid " + str(res_index  ))[0]               # 
+    atom_N1 = system.select_atoms("name N  and resid " + str(res_index+1))[0]               # 
+    
+    dihedral_angle_list = []                                                                # Assemble List of Dihedral Angles
+    for ts in system.trajectory:                                                            # 
+        dihedral_angle_list.append( dihedral_angle(atom_N.position, atom_CA.position, atom_C0.position, atom_N1.position) )
+    return dihedral_angle_list                                                              # 
+    
+def get_omega_angle( psf, dcd, res_index ):
+    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+    
+    ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
+    atom_CA0 = system.select_atoms("name CA and resid " + str(res_index-1))[0]              # 
+    atom_C0  = system.select_atoms("name C  and resid " + str(res_index-1))[0]              # 
+    atom_N1  = system.select_atoms("name N  and resid " + str(res_index  ))[0]              # 
+    atom_CA1 = system.select_atoms("name CA and resid " + str(res_index  ))[0]              # 
+    
+    
+    dihedral_angle_list = []                                                                # Assemble List of Dihedral Angles
+    for ts in system.trajectory:                                                            # 
+        dihedral_angle_list.append( dihedral_angle(atom_CA0.position, atom_C0.position, atom_N1.position, atom_CA1.position) )
+    return dihedral_angle_list                                                              # 
+
+# http://www.ccp14.ac.uk/ccp/web-mirrors/garlic/garlic/commands/dihedrals.html
+def get_chi1_angle( psf, dcd, res_index ):
+    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+    
+    ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
+    atom_N  = system.select_atoms("name N  and resid " + str(res_index))[0]                 # 
+    atom_CA = system.select_atoms("name CA and resid " + str(res_index))[0]                 # 
+    atom_CB = system.select_atoms("name CB and resid " + str(res_index))[0]                 # 
+    atom_CG = system.select_atoms("name CG and resid " + str(res_index))[0]                 # 
+    if((atom_CB == None) or (atom_CG == None)):
+        return None
+    
+    dihedral_angle_list = []                                                                # Assemble List of Dihedral Angles
+    for ts in system.trajectory:                                                            # 
+        dihedral_angle_list.append( dihedral_angle(atom_N.position, atom_CA.position, atom_CB.position, atom_CG.position) )
+    return dihedral_angle_list                                                              # 
+
+def list_to_dat(list,path):                     # 
+    file = open(path,"w+")                      # 
+    for item in list:                           # 
+        file.write(item)                        # 
+    file.close()                                # 
+
+
+def angle(angle,res_index, psf, *traj):                         # 
+    if(len(traj) == 1):                                         # Single Point 
+        return angle(psf,traj[0],res_index)[-1]                 #   Return Last Frame
+    else:                                                       # Multiple
+        angle_list = angle(psf,traj[0],res_index)[-1]           #   Last Frame of First Trajectory
+        next(traj)                                              #   Skip First Trajectory
+        for t in traj:                                          #   
+            angle_list = angle_list + angle(psf,t,res_index)    #   Sum Trajectories
+        return angle_list                                       #   
+
+
+
+# Main                                                                                                      # Main
+if __name__ == "__main__":
+    a= angle(get_phi_angle,28,"step3_pbcsetup.xplor.ext.psf","step4_equilibration.dcd")
+    print(a)
+    #get_phi_angle   = get_phi_angle(   "step3_pbcsetup.xplor.ext.psf", "step4_equilibration.dcd", 28 )
+    #get_psi_angle   = get_psi_angle(   "step3_pbcsetup.xplor.ext.psf", "step4_equilibration.dcd", 28 )
+    #get_omega_angle = get_omega_angle( "step3_pbcsetup.xplor.ext.psf", "step4_equilibration.dcd", 28 )
+    
+    
