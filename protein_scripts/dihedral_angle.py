@@ -1,7 +1,8 @@
 # Imports
-import pars_pdb
+#import pars_pdb
 import MDAnalysis
 import numpy as np
+import math
 
 # Imports for Main
 if (__name__ == "__main__"):
@@ -77,9 +78,9 @@ def get_chi1_angle( psf, dcd, res_index ):
     atom_N  = system.select_atoms("name N  and resid " + str(res_index))[0]                 # 
     atom_CA = system.select_atoms("name CA and resid " + str(res_index))[0]                 # 
     atom_CB = system.select_atoms("name CB and resid " + str(res_index))[0]                 # 
-    atom_CG = system.select_atoms("name CG and resid " + str(res_index))[0]                 # 
-    if((atom_CB == None) or (atom_CG == None)):
-        return None
+    atom_CG = system.select_atoms("name CG1 and resid " + str(res_index))[0]                 # 
+    #if((atom_CB == None) or (atom_CG == None)):
+        #return None
     
     dihedral_angle_list = []                                                                # Assemble List of Dihedral Angles
     for ts in system.trajectory:                                                            # 
@@ -89,9 +90,14 @@ def get_chi1_angle( psf, dcd, res_index ):
 def list_to_dat(list,path):                     # 
     file = open(path,"w+")                      # 
     for item in list:                           # 
-        file.write(item)                        # 
+        file.write(str(item)+"\n")                        # 
     file.close()                                # 
 
+def radians_to_degrees(radians):
+    degrees = []
+    for i in radians:
+        degrees.append(i*180/math.pi)
+    return degrees
 
 def angle(angle,res_index, psf, *traj):                         # 
     if(len(traj) == 1):                                         # Single Point 
@@ -107,10 +113,13 @@ def angle(angle,res_index, psf, *traj):                         #
 
 # Main                                                                                                      # Main
 if __name__ == "__main__":
-    a= angle(get_phi_angle,28,"step3_pbcsetup.xplor.ext.psf","step4_equilibration.dcd")
-    print(a)
-    #get_phi_angle   = get_phi_angle(   "step3_pbcsetup.xplor.ext.psf", "step4_equilibration.dcd", 28 )
-    #get_psi_angle   = get_psi_angle(   "step3_pbcsetup.xplor.ext.psf", "step4_equilibration.dcd", 28 )
-    #get_omega_angle = get_omega_angle( "step3_pbcsetup.xplor.ext.psf", "step4_equilibration.dcd", 28 )
     
+    phi_angle_list = get_phi_angle("prod_out_new.pdb","prod_out_new.dcd",93)
+    degrees_phi_angle_list = radians_to_degrees(phi_angle_list)
+    list_to_dat(degrees_phi_angle_list,"phi.dat")
+    
+    
+    chi1_angle_list = get_chi1_angle("prod_out_new.pdb","prod_out_new.dcd",93)
+    degrees_chi1_angle_list = radians_to_degrees(phi_angle_list)
+    list_to_dat(degrees_chi1_angle_list,"chi1.dat")
     
