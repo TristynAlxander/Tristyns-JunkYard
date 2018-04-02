@@ -27,8 +27,8 @@ def dihedral_angle(a,b,c,d):
     dihedral_angle = np.arccos(np.dot(bcd_norm_vec,abc_norm_vec)/(np.linalg.norm(bcd_norm_vec)*np.linalg.norm(abc_norm_vec)))
     return dihedral_angle
 
-def get_phi_angle( psf, dcd, res_index ):
-    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+def get_phi_angle( system, res_index ):
+    
     
     ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
     atom_C0 = system.select_atoms("name C  and resid " + str(res_index-1))[0]               # 
@@ -41,8 +41,7 @@ def get_phi_angle( psf, dcd, res_index ):
         dihedral_angle_list.append( dihedral_angle(atom_C0.position, atom_N.position, atom_CA.position, atom_C1.position) )
     return dihedral_angle_list                                                              # 
 
-def get_psi_angle( psf, dcd, res_index ):
-    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+def get_psi_angle( system, res_index ):
     
     ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
     atom_N  = system.select_atoms("name N  and resid " + str(res_index  ))[0]               # 
@@ -55,8 +54,7 @@ def get_psi_angle( psf, dcd, res_index ):
         dihedral_angle_list.append( dihedral_angle(atom_N.position, atom_CA.position, atom_C0.position, atom_N1.position) )
     return dihedral_angle_list                                                              # 
     
-def get_omega_angle( psf, dcd, res_index ):
-    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+def get_omega_angle( system, res_index ):
     
     ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
     atom_CA0 = system.select_atoms("name CA and resid " + str(res_index-1))[0]              # 
@@ -71,8 +69,7 @@ def get_omega_angle( psf, dcd, res_index ):
     return dihedral_angle_list                                                              # 
 
 # http://www.ccp14.ac.uk/ccp/web-mirrors/garlic/garlic/commands/dihedrals.html
-def get_chi1_angle( psf, dcd, res_index ):
-    system    = MDAnalysis.Universe(psf, dcd)                                               # Define System Universe
+def get_chi1_angle( system, res_index ):
     
     ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
     atom_N  = system.select_atoms("name N  and resid " + str(res_index))[0]                 # 
@@ -114,12 +111,17 @@ def angle(angle,res_index, psf, *traj):                         #
 # Main                                                                                                      # Main
 if __name__ == "__main__":
     
-    phi_angle_list = get_phi_angle("prod_out_new.pdb","prod_out_new.dcd",93)
+    system    = MDAnalysis.Universe("inca-3-nowater.pdb")                                               # Define System Universe
+    
+    
+    
+    
+    phi_angle_list = get_phi_angle(system,93)
     degrees_phi_angle_list = radians_to_degrees(phi_angle_list)
-    list_to_dat(degrees_phi_angle_list,"phi.dat")
+    list_to_dat(degrees_phi_angle_list,"Trp_ab_phi_3.dat")
     
     
-    chi1_angle_list = get_chi1_angle("prod_out_new.pdb","prod_out_new.dcd",93)
+    chi1_angle_list = get_chi1_angle(system,93)
     degrees_chi1_angle_list = radians_to_degrees(phi_angle_list)
-    list_to_dat(degrees_chi1_angle_list,"chi1.dat")
+    list_to_dat(degrees_chi1_angle_list,"Trp_ab_chi1_3.dat")
     
