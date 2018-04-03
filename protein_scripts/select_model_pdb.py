@@ -10,8 +10,9 @@ if (__name__ == "__main__"):
 def select_model(pdb_path,m):
     
     # Initialize Files
-    pdb_old = open(pdb_path)                                            # Get  old PDB File
-    pdb_new = open(pdb_path[:-4]+"_m"+str(m)+".pdb","w+")              # Make new PDB File
+    pdb_old  = open(pdb_path)                                           # Get  old PDB File
+    new_name = pdb_path[:-4]+"_m"+str(m)+".pdb"                         # 
+    pdb_new  = open(new_name,"w+")                                      # Make new PDB File
     
     # Initialize Variables
     model_number = 0
@@ -37,6 +38,8 @@ def select_model(pdb_path,m):
     
     pdb_old.close()
     pdb_new.close()
+    return new_name
+    
 if (__name__ == "__main__"):
     pdb_path = os.path.abspath(sys.argv[1])     # Get PDB
     m        = int(sys.argv[2])                 # Get PDB
