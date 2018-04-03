@@ -11,7 +11,8 @@ if (__name__ == "__main__"):
 def strip_H(pdb_path):
     # Initialize Files
     pdb_old = open(pdb_path)                                                    # Get  old PDB File
-    pdb_new = open(pdb_path[:-4]+"_strip_H.pdb","w+")                           # Make new PDB File
+    new_name = pdb_path[:-4]+"_strip_h.pdb"                                     # 
+    pdb_new  = open(new_name,"w+")                                              # Make new PDB File
     
     for line in pdb_old:
         fields = line.strip().split()                                           # Splits Columns
@@ -23,6 +24,7 @@ def strip_H(pdb_path):
             pdb_new.write(line)                                                 # Write
     pdb_old.close()
     pdb_new.close()
+    return new_name
 
 if (__name__ == "__main__"):
     pdb_path = os.path.abspath(sys.argv[1])                                     # Get PDB
