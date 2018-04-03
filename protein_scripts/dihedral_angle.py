@@ -111,7 +111,7 @@ def angle(angle,res_index, psf, *traj):                         #
 # Main                                                                                                      # Main
 if __name__ == "__main__":
     
-    system    = MDAnalysis.Universe("inca-3-nowater.pdb")                                               # Define System Universe
+    system    = MDAnalysis.Universe("prod_out_new.pdb","prod_out_new.dcd")                                               # Define System Universe
     
     
     
@@ -122,6 +122,6 @@ if __name__ == "__main__":
     
     
     chi1_angle_list = get_chi1_angle(system,93)
-    degrees_chi1_angle_list = radians_to_degrees(phi_angle_list)
+    degrees_chi1_angle_list = radians_to_degrees(chi1_angle_list)
     list_to_dat(degrees_chi1_angle_list,"Trp_ab_chi1_3.dat")
     
