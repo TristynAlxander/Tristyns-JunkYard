@@ -68,14 +68,13 @@ def _cut_residues_end_(pdb_path,end):
     pdb_new.close()                                                             # 
     return new_name                                                             # Return File Name
     
-def cut_residues(path,start=-1,end=-1):                                         # Select Correct Function
-    name=""                                                                     # Default Name
+def cut_residues(name,start=-1,end=-1):                                         # Select Correct Function
     if(  start != -1 and end != -1):                                            # Start And End
-        name = _cut_start_end_(path,start,end)                                  # 
+        name = _cut_start_end_(name,start,end)                                  # 
     elif(start != -1):                                                          # Just Start
-        name = _cut_start_(path,start)                                          # 
+        name = _cut_start_(name,start)                                          # 
     elif(end   != -1):                                                          # Just End
-        name = _cut_end_(path,end)                                              # 
+        name = _cut_end_(name,end)                                              # 
     return name                                                                 # Return Name
         
 if (__name__ == "__main__"):
