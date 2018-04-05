@@ -67,7 +67,7 @@ def print_atom_fields(fields):
 
 def pdb_atom_to_line(fields):
     # Check Types
-    bad_type = False
+    bad_type = False                                                        # Tracking bad_type not currently used. 
     if(   not type(fields[0])  is str ):                                    # 0  str    ATOM
         bad_type = True                                                     #
         print("Warning Bad Type: Identifier should be string = \"ATOM\"")   #
