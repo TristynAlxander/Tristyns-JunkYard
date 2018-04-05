@@ -115,7 +115,27 @@ def pdb_atom_to_line(fields):
         print("Warning Bad Type: Element Symbol should be str")             #
     
     # Convert to String
-    line = "{0:<6.6}{1:>5}  {2:<3.3}{3:<1.1}{4:>3.3} {5:<1.1}{6:>4}{7:<1.1}    {8:>8.7}{9:>8.7}{10:>8.7}{11:>6.6}{12:>6.6}      {13:>4.4}{14:>2.2}".format(*fields)
+    line = (
+        "{0:<6.6}"              # 0     str    ATOM
+        +"{1:>5}"               # 1     int    Atom Serial Number
+        +"  "                   # 
+        +"{2:<3.3}"             # 2     str    Atom Name
+        +"{3:<1.1}"             # 3     str    Alternate Location Indicator
+        +"{4:>3.3}"             # 4     str    Residue Name
+        +" "                    # 
+        +"{5:<1.1}"             # 5     str    Chain Identifier
+        +"{6:>4}"               # 6     int    Residue Sequence Number
+        +"{7:<1.1}"             # 7     str    Insertion Codes of Residues
+        +"    "                 # 
+        +"{8:>8.7}"             # 8     float  X Orthogonal A Coordinate
+        +"{9:>8.7}"             # 9     float  Y Orthogonal A Coordinate
+        +"{10:>8.7}"            # 10    float  Z Orthogonal A Coordinate
+        +"{11:>6.6}"            # 11    float  Occupancy
+        +"{12:>6.6}"            # 12    float  Temperature Factor
+        +"      "               # 
+        +"{13:>4.4}"            # 13    str    Segment Identifier
+        +"{14:>2.2}"            # 14    str    Element Symbol
+        ).format(*fields)       # Inset Fields
     return line
 # TER
 def line_to_pdb_ter(line):
