@@ -32,21 +32,21 @@
 # ATOM
 def line_to_pdb_atom(line):
     fields = []
-    fields.append(line[0:6].strip())               # 0  ATOM
-    fields.append(int(line[6:11].strip()))         # 1  Atom Serial Number
-    fields.append(line[12:16].strip())             # 2  Atom Name
-    fields.append(line[16].strip())                # 3  Alternate Location Indicator
-    fields.append(line[17:21].strip())             # 4  Residue Name
-    fields.append(line[21].strip())                # 5  Chain Identifier
-    fields.append(int(line[22:26].strip()))        # 6  Residue Sequence Number
-    fields.append(line[26].strip())                # 7  Insertion Codes of Residues
-    fields.append(float(line[30:38].strip()))      # 8  X Orthogonal A Coordinate
-    fields.append(float(line[38:46].strip()))      # 9  Y Orthogonal A Coordinate
-    fields.append(float(line[46:54].strip()))      # 10 Z Orthogonal A Coordinate
-    fields.append(float(line[54:60].strip()))      # 11 Occupancy
-    fields.append(float(line[60:66].strip()))      # 12 Temperature Factor
-    fields.append(line[72:76].strip())             # 13 Segment Identifier
-    fields.append(line[76:78].strip())             # 14 Element Symbol
+    fields.append(line[0:6].strip())                # 0  str    ATOM
+    fields.append(int(line[6:11].strip()))          # 1  int    Atom Serial Number
+    fields.append(line[12:16].strip())              # 2  str    Atom Name
+    fields.append(line[16].strip())                 # 3  str    Alternate Location Indicator
+    fields.append(line[17:21].strip())              # 4  str    Residue Name
+    fields.append(line[21].strip())                 # 5  str    Chain Identifier
+    fields.append(int(line[22:26].strip()))         # 6  int    Residue Sequence Number
+    fields.append(line[26].strip())                 # 7  str    Insertion Codes of Residues
+    fields.append(float(line[30:38].strip()))       # 8  float  X Orthogonal A Coordinate
+    fields.append(float(line[38:46].strip()))       # 9  float  Y Orthogonal A Coordinate
+    fields.append(float(line[46:54].strip()))       # 10 float  Z Orthogonal A Coordinate
+    fields.append(float(line[54:60].strip()))       # 11 float  Occupancy
+    fields.append(float(line[60:66].strip()))       # 12 float  Temperature Factor
+    fields.append(line[72:76].strip())              # 13 str    Segment Identifier
+    fields.append(line[76:78].strip())              # 14 str    Element Symbol
     return fields
 def print_atom_fields(fields):
     print("{0:<30.30}{1}".format("ATOM: "               , fields[0]))        # 0  ATOM
@@ -66,6 +66,55 @@ def print_atom_fields(fields):
     print("{0:<30.30}{1}".format("Element: "            , fields[14]))       # 14 Element Symbol
 
 def pdb_atom_to_line(fields):
+    # Check Types
+    bad_type = False
+    if(   not type(fields[0])  is str ):                                    # 0  str    ATOM
+        bad_type = True                                                     #
+        print("Warning Bad Type: Identifier should be string = \"ATOM\"")   #
+    elif( not type(fields[1])  is int ):                                    # 1  int    Atom Serial Number
+        bad_type = True                                                     #
+        print("Warning Bad Type: Atom Number should be int")                #
+    elif( not type(fields[2])  is str ):                                    # 2  str    Atom Name
+        bad_type = True                                                     #
+        print("Warning Bad Type: Atom Name should be str")                  #
+    elif( not type(fields[3])  is str ):                                    # 3  str    Alternate Location Indicator
+        bad_type = True                                                     #
+        print("Warning Bad Type: Alt Location Indicator should be str")     #
+    elif( not type(fields[4])  is str ):                                    # 4  str    Residue Name
+        bad_type = True                                                     #
+        print("Warning Bad Type: Residue Name should be str")               #
+    elif( not type(fields[5])  is str ):                                    # 5  str    Chain Identifier
+        bad_type = True                                                     #
+        print("Warning Bad Type: Chain Identifier should be str")           #
+    elif( not type(fields[6])  is int ):                                    # 6  int    Residue Sequence Number
+        bad_type = True                                                     #
+        print("Warning Bad Type: Residue Sequence Number should be int")    #
+    elif( not type(fields[7])  is str ):                                    # 7  str    Insertion Codes of Residues
+        bad_type = True                                                     #
+        print("Warning Bad Type: Insertion Code should be str")             #
+    elif( not type(fields[8])  is float ):                                  # 8  float  X Orthogonal A Coordinate
+        bad_type = True                                                     #
+        print("Warning Bad Type: x coordinate should be float")             #
+    elif( not type(fields[9])  is float ):                                  # 9  float  Y Orthogonal A Coordinate
+        bad_type = True                                                     #
+        print("Warning Bad Type: y coordinate should be float")             #
+    elif( not type(fields[10]) is float ):                                  # 10 float  Z Orthogonal A Coordinate
+        bad_type = True                                                     #
+        print("Warning Bad Type: z coordinate should be float")             #
+    elif( not type(fields[11]) is float ):                                  # 11 float  Occupancy
+        bad_type = True                                                     #
+        print("Warning Bad Type: Occupancy should be float")                #
+    elif( not type(fields[12]) is float ):                                  # 12 float  Temperature Factor
+        bad_type = True                                                     #
+        print("Warning Bad Type: Temperature Factor should be float")       #
+    elif( not type(fields[13]) is str ):                                    # 13 str    Segment Identifier
+        bad_type = True                                                     #
+        print("Warning Bad Type: Segment ID should be str")                 #
+    elif( not type(fields[14]) is str ):                                    # 14 str    Element Symbol
+        bad_type = True                                                     #
+        print("Warning Bad Type: Element Symbol should be str")             #
+    
+    # Convert to String
     line = "{0:<6.6}{1:>5}  {2:<3.3}{3:<1.1}{4:>3.3} {5:<1.1}{6:>4}{7:<1.1}    {8:>8.7}{9:>8.7}{10:>8.7}{11:>6.6}{12:>6.6}      {13:>4.4}{14:>2.2}".format(*fields)
     return line
 # TER
