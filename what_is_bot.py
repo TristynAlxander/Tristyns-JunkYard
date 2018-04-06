@@ -8,7 +8,7 @@ USERNAME = ""
 PASSWORD = ""
 CLIENT_ID = ""
 CLIENT_SECRET = ""
-USER_AGENT = 'script:Answer what-is questions users:v0.2:written by /u/TrystynAlxander'
+USER_AGENT = 'script:Answer what-is questions users:v0.2:written by /u/'
 
 
 
