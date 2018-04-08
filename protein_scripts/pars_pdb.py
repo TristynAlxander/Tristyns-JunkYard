@@ -47,8 +47,7 @@ class Atom:
             + " "                                                  
             + "{0:>4.4}".format("{0:3}".format( self.atom_name  ) )
             + "{0:<1.1}".format(                self.alt_id       )
-            + "{0:>3.3}".format(                self.res_name     )
-            + " "                                                  
+            + "{0:>4.4}".format("{0:3}".format( self.res_name   ) )
             + "{0:<1.1}".format(                self.chain_id     )
             +   "{0:>4}".format(                self.res_number   )
             + "{0:<1.1}".format(                self.insert_code  )
@@ -190,8 +189,7 @@ def pdb_atom_to_line(fields):
             + " "                                                  
             + "{0:>4.4}".format("{0:3}".format( self.atom_name  ) )
             + "{0:<1.1}".format(                self.alt_id       )
-            + "{0:>3.3}".format(                self.res_name     )
-            + " "                                                  
+            + "{0:>4.4}".format("{0:3}".format( self.res_name   ) )
             + "{0:<1.1}".format(                self.chain_id     )
             +   "{0:>4}".format(                self.res_number   )
             + "{0:<1.1}".format(                self.insert_code  )
