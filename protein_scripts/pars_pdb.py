@@ -1,9 +1,10 @@
+
 class Atom:
     
     def __init__(self):
         # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
         self.atom_type      = "ATOM"    # Str
-        self.atom_number    = None      # Int
+        self.atom_number    = None      # Unique Int, aside from alt_id
         self.atom_name      = ""        # Str 
         self.element        = ""        # Str
         self.seg_id         = ""        # Str
@@ -18,13 +19,17 @@ class Atom:
         self.x_coordinate   = None      # float
         self.y_coordinate   = None      # float 
         self.z_coordinate   = None      # float
-    
+        
+        self.is_protein     = None
+        self.connects       = []        # Array of Atom_number
+        self.charge         = None
+        
     def load_pdb_line(self,line):
         self.atom_type      =       line[ 0:6 ].strip()
         self.atom_number    = int(  line[ 6:11].strip())
         self.atom_name      =       line[12:16].strip()
         self.alt_id         =       line[ 16  ].strip()
-        self.res_name       =       line[17:21].strip()
+        self.res_name       =       line[17:21].strip().lower()
         self.chain_id       =       line[ 21  ].strip()
         self.res_number     = int(  line[22:26].strip())
         self.insert_code    =       line[ 26  ].strip()
@@ -58,12 +63,14 @@ class Atom:
             + "{0:>2.2}".format(                self.element      )
             )
         return line
-
-
+    
+    
+    
+    
 # Tools for Processing PDB Files.
 # 
 # PDB Format Functions (below) via: 
-# https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
+
 # Mostly followed that, mostly.
 #
 # ATOM
