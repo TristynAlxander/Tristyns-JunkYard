@@ -29,7 +29,7 @@ class Atom:
         self.atom_number    = int(  line[ 6:11].strip())
         self.atom_name      =       line[12:16].strip()
         self.alt_id         =       line[ 16  ].strip()
-        self.res_name       =       line[17:21].strip().lower()
+        self.res_name       =       line[17:21].strip().upper()
         self.chain_id       =       line[ 21  ].strip()
         self.res_number     = int(  line[22:26].strip())
         self.insert_code    =       line[ 26  ].strip()
@@ -53,13 +53,13 @@ class Atom:
             +   "{0:>4}".format(                self.res_number   )
             + "{0:<1.1}".format(                self.insert_code  )
             + "   "                                                
-            + "{0:>8.7}".format(                self.x_coordinate )
-            + "{0:>8.7}".format(                self.y_coordinate )
-            + "{0:>8.7}".format(                self.z_coordinate )
-            + "{0:>6.6}".format(                self.occupancy    )
-            + "{0:>6.6}".format(                self.temp_factor  )
+            + "{0:>8.3f}".format(                self.x_coordinate )
+            + "{0:>8.3f}".format(                self.y_coordinate )
+            + "{0:>8.3f}".format(                self.z_coordinate )
+            + "{0:>6.2f}".format(                self.occupancy    )
+            + "{0:>6.2f}".format(                self.temp_factor  )
             + "      "                                             
-            + "{0:>4.4}".format(                self.seg_id       )
+            + "{0:<4.4}".format(                self.seg_id       )
             + "{0:>2.2}".format(                self.element      )
             )
         return line
@@ -185,26 +185,26 @@ def pdb_atom_to_line(fields):
     
     # Convert to String
     line = (
-          "{0:<6.6}".format(                fields[0]  )            # 0     str    ATOM
-        +   "{0:>5}".format(                fields[1]  )            # 1     int    Atom Serial Number
-        + " "                                                       # 
-        + "{0:>4.4}".format("{0:3}".format( fields[2]  ))           # 2     str    Atom Name
-        + "{0:<1.1}".format(                fields[3]  )            # 3     str    Alternate Location Indicator
-        + "{0:>3.3}".format(                fields[4]  )            # 4     str    Residue Name
-        + " "                                                       # 
-        + "{0:<1.1}".format(                fields[5]  )            # 5     str    Chain Identifier
-        +   "{0:>4}".format(                fields[6]  )            # 6     int    Residue Sequence Number
-        + "{0:<1.1}".format(                fields[7]  )            # 7     str    Insertion Codes of Residues
-        + "   "                                                     # 
-        + "{0:>8.7}".format(                fields[8]  )            # 8     float  X Orthogonal A Coordinate
-        + "{0:>8.7}".format(                fields[9]  )            # 9     float  Y Orthogonal A Coordinate
-        + "{0:>8.7}".format(                fields[10] )            # 10    float  Z Orthogonal A Coordinate
-        + "{0:>6.6}".format(                fields[11] )            # 11    float  Occupancy
-        + "{0:>6.6}".format(                fields[12] )            # 12    float  Temperature Factor
-        + "      "                                                  # 
-        + "{0:>4.4}".format(                fields[13] )            # 13    str    Segment Identifier
-        + "{0:>2.2}".format(                fields[14] )            # 14    str    Element Symbol
-        )
+              "{0:<6.6}".format(                self.atom_type    )
+            +   "{0:>5}".format(                self.atom_number  )
+            + " "                                                  
+            + "{0:>4.4}".format("{0:3}".format( self.atom_name  ) )
+            + "{0:<1.1}".format(                self.alt_id       )
+            + "{0:>3.3}".format(                self.res_name     )
+            + " "                                                  
+            + "{0:<1.1}".format(                self.chain_id     )
+            +   "{0:>4}".format(                self.res_number   )
+            + "{0:<1.1}".format(                self.insert_code  )
+            + "   "                                                
+            + "{0:>8.3f}".format(                self.x_coordinate )
+            + "{0:>8.3f}".format(                self.y_coordinate )
+            + "{0:>8.3f}".format(                self.z_coordinate )
+            + "{0:>6.2f}".format(                self.occupancy    )
+            + "{0:>6.2f}".format(                self.temp_factor  )
+            + "      "                                             
+            + "{0:<4.4}".format(                self.seg_id       )
+            + "{0:>2.2}".format(                self.element      )
+            )
     return line
 # TER
 def line_to_pdb_ter(line):
