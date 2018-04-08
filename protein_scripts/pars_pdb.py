@@ -1,3 +1,65 @@
+class Atom:
+    
+    def __init__(self):
+        # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
+        self.atom_type      = "ATOM"    # Str
+        self.atom_number    = None      # Int
+        self.atom_name      = ""        # Str 
+        self.element        = ""        # Str
+        self.seg_id         = ""        # Str
+        self.chain_id       = ""        # char
+        self.res_name       = ""        # Str
+        self.res_number     = None      # Int
+        self.alt_id         = ""        # char 
+        self.insert_code    = ""        # char
+        self.occupancy      = 1         # float
+        self.temp_factor    = 0         # float
+        
+        self.x_coordinate   = None      # float
+        self.y_coordinate   = None      # float 
+        self.z_coordinate   = None      # float
+    
+    def load_pdb_line(self,line):
+        self.atom_type      =       line[ 0:6 ].strip()
+        self.atom_number    = int(  line[ 6:11].strip())
+        self.atom_name      =       line[12:16].strip()
+        self.alt_id         =       line[ 16  ].strip()
+        self.res_name       =       line[17:21].strip()
+        self.chain_id       =       line[ 21  ].strip()
+        self.res_number     = int(  line[22:26].strip())
+        self.insert_code    =       line[ 26  ].strip()
+        self.x_coordinate   = float(line[30:38].strip())
+        self.y_coordinate   = float(line[38:46].strip())
+        self.z_coordinate   = float(line[46:54].strip())
+        self.occupancy      = float(line[54:60].strip())
+        self.temp_factor    = float(line[60:66].strip())
+        self.seg_id         =       line[72:76].strip()
+        self.element        =       line[76:78].strip()
+    def pdb_line(self):
+        line = (
+              "{0:<6.6}".format(                self.atom_type    )
+            +   "{0:>5}".format(                self.atom_number  )
+            + " "                                                  
+            + "{0:>4.4}".format("{0:3}".format( self.atom_name  ) )
+            + "{0:<1.1}".format(                self.alt_id       )
+            + "{0:>3.3}".format(                self.res_name     )
+            + " "                                                  
+            + "{0:<1.1}".format(                self.chain_id     )
+            +   "{0:>4}".format(                self.res_number   )
+            + "{0:<1.1}".format(                self.insert_code  )
+            + "   "                                                
+            + "{0:>8.7}".format(                self.x_coordinate )
+            + "{0:>8.7}".format(                self.y_coordinate )
+            + "{0:>8.7}".format(                self.z_coordinate )
+            + "{0:>6.6}".format(                self.occupancy    )
+            + "{0:>6.6}".format(                self.temp_factor  )
+            + "      "                                             
+            + "{0:>4.4}".format(                self.seg_id       )
+            + "{0:>2.2}".format(                self.element      )
+            )
+        return line
+
+
 # Tools for Processing PDB Files.
 # 
 # PDB Format Functions (below) via: 
