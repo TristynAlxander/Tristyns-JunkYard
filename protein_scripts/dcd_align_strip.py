@@ -8,12 +8,13 @@ if (__name__ == "__main__"):
     import os
 
 
-def save_dcd(uni, filename, sel_str="not segid SOLV"):
+def save_dcd(uni, filename, sel_str="not segid SOLV",stride=100):
     dcd = filename[:-4]+"_new.dcd"
     sel = uni.select_atoms(sel_str)                                                         # Make Selection
-    with MDAnalysis.Writer(dcd, multiframe=False, n_atoms=sel.n_atoms) as W:                 # Make Writer
-        for ts in uni.trajectory:                                                           # For each time-step
-            W.write(sel)                                                                    # Save Selected
+    with MDAnalysis.Writer(dcd, n_atoms=sel.n_atoms) as W:                                  # Make Writer
+        for i,ts in zip(range(0,len(uni.trajectory)),uni.trajectory):                       # For Timestep
+            if(i%stride == 0):                                                              # with index matching stride
+                W.write(sel)                                                                # Save Selected
 
 def align_traj(traj_uni, ref_uni, sel_str="name CA"):
     # Get Selection
