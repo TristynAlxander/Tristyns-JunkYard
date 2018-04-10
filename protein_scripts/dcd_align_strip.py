@@ -31,7 +31,15 @@ if (__name__ == "__main__"):
     sel_str="not segid SOLV"
     
     # sys.argv[0] is this script, so don't count it.
-    if(len(sys.argv) == 3):
+    if(len(sys.argv) == 2):
+        pdb      = os.path.abspath(sys.argv[1])             # 
+        path     = os.path.dirname(pdb)+"/"                 # 
+        new_pdb  = sys.argv[2][:-4]+"_new.pdb"              # 
+        
+        traj_uni = MDAnalysis.Universe(pdb)                 # 
+        sel = traj_uni.select_atoms(sel_str).write(new_pdb) # 
+        ref_uni  = MDAnalysis.Universe(path+new_pdb)        # 
+    elif(len(sys.argv) == 3):
         psf  = os.path.abspath(sys.argv[1])             # 
         dcd  = os.path.abspath(sys.argv[2])             # 
         path = os.path.dirname(dcd)+"/"                 # 
@@ -40,8 +48,7 @@ if (__name__ == "__main__"):
         traj_uni = MDAnalysis.Universe(psf, dcd)        # 
         sel = traj_uni.select_atoms(sel_str).write(pdb) # 
         ref_uni  = MDAnalysis.Universe(path+pdb)        # 
-       
-    if(len(sys.argv) == 4):
+    elif(len(sys.argv) == 4):
         psf      = os.path.abspath(sys.argv[1])     # 
         dcd      = os.path.abspath(sys.argv[2])     # 
         pdb_ref  = os.path.abspath(sys.argv[3])     # 
