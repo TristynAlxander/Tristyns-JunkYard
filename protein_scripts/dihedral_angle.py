@@ -146,7 +146,7 @@ def dihedral_angle(a,b,c,d):
     c_to_b            = np.subtract(c,b)                                            # 
     c_to_d            = np.subtract(c,d)                                            # 
     
-    perpendicular     = b_to_c                                                      # TODO: Is this the right perpendicular?
+    perpendicular     = c_to_b                                                      # TODO: Is this the right perpendicular? c_to_b
     
     unit_normal       = np.dot(perpendicular , 1/np.linalg.norm(perpendicular) )    # Unit Normal, to make everything a scale properly.
     
@@ -227,18 +227,3 @@ def radians_to_degrees(radians):
     return degrees
 
 
-
-# Main                                                                                                      # Main
-if __name__ == "__main__":
-    
-    system    = MDAnalysis.Universe("prod_out_new.pdb","prod_out_new.dcd")                                               # Define System Universe
-    
-    phi_angle_list = get_phi_angle(system,93)
-    degrees_phi_angle_list = radians_to_degrees(phi_angle_list)
-    list_to_dat(degrees_phi_angle_list,"Trp_ab_phi_3.dat")
-    
-    
-    chi1_angle_list = get_chi1_angle(system,93)
-    degrees_chi1_angle_list = radians_to_degrees(chi1_angle_list)
-    list_to_dat(degrees_chi1_angle_list,"Trp_ab_chi1_3.dat")
-    
