@@ -5,10 +5,10 @@ if (__name__ == "__main__"):
     import sys
     import os
 
-def first_pdb(system,pdb,sel_str="not segid SOLV"):                             ### Get First Trajectory ###
+def first_pdb(system,pdb,sel_str="all"):                                        ### Get First Trajectory ###
     system.select_atoms(sel_str).write(pdb)                                     # 
 
-def last_pdb(system,pdb,sel_str="not segid SOLV"):                              ### Get Last Trajectory ###
+def last_pdb(system,pdb,sel_str="all"):                                         ### Get Last Trajectory ###
     traj = system.trajectory                                                    # Get the Trajectory
     for i in range(0, len(traj)-1, 1):                                          # For all but the last Trajectory
         next(traj)                                                              #   Skip the Trajectory
