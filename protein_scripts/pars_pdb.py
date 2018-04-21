@@ -135,6 +135,22 @@ def print_atom_fields(fields):
 
 def pdb_atom_to_line(fields):
     # Check Types
+    atom_type    = fields[0]
+    atom_number  = fields[1]
+    atom_name    = fields[2]
+    alt_id       = fields[3]
+    res_name     = fields[4]
+    chain_id     = fields[5]
+    res_number   = fields[6]
+    insert_code  = fields[7]
+    x_coordinate = fields[8]
+    y_coordinate = fields[9]
+    z_coordinate = fields[10]
+    occupancy    = fields[11]
+    temp_factor  = fields[12]
+    seg_id       = fields[13]
+    element      = fields[14]
+    
     bad_type = False
     if(   not type(fields[0])  is str ):                                    # 0  str    ATOM
         bad_type = True                                                     #
@@ -184,24 +200,24 @@ def pdb_atom_to_line(fields):
     
     # Convert to String
     line = (
-              "{0:<6.6}".format(                self.atom_type    )
-            +   "{0:>5}".format(                self.atom_number  )
+              "{0:<6.6}".format(                atom_type    )
+            +   "{0:>5}".format(                atom_number  )
             + " "                                                  
-            + "{0:>4.4}".format("{0:3}".format( self.atom_name  ) )
-            + "{0:<1.1}".format(                self.alt_id       )
-            + "{0:>4.4}".format("{0:3}".format( self.res_name   ) )
-            + "{0:<1.1}".format(                self.chain_id     )
-            +   "{0:>4}".format(                self.res_number   )
-            + "{0:<1.1}".format(                self.insert_code  )
+            + "{0:>4.4}".format("{0:3}".format( atom_name  ) )
+            + "{0:<1.1}".format(                alt_id       )
+            + "{0:>4.4}".format("{0:3}".format( res_name   ) )
+            + "{0:<1.1}".format(                chain_id     )
+            +   "{0:>4}".format(                res_number   )
+            + "{0:<1.1}".format(                insert_code  )
             + "   "                                                
-            + "{0:>8.3f}".format(                self.x_coordinate )
-            + "{0:>8.3f}".format(                self.y_coordinate )
-            + "{0:>8.3f}".format(                self.z_coordinate )
-            + "{0:>6.2f}".format(                self.occupancy    )
-            + "{0:>6.2f}".format(                self.temp_factor  )
+            + "{0:>8.3f}".format(               x_coordinate )
+            + "{0:>8.3f}".format(               y_coordinate )
+            + "{0:>8.3f}".format(               z_coordinate )
+            + "{0:>6.2f}".format(               occupancy    )
+            + "{0:>6.2f}".format(               temp_factor  )
             + "      "                                             
-            + "{0:<4.4}".format(                self.seg_id       )
-            + "{0:>2.2}".format(                self.element      )
+            + "{0:<4.4}".format(                seg_id       )
+            + "{0:>2.2}".format(                element      )
             )
     return line
 # TER
