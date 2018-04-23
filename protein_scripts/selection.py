@@ -44,12 +44,12 @@ def select_atoms(pdb_path_old,pdb_path_new,sel_func,atom_edit):
         fields = line.strip().split()                           # Splits Columns
         if(fields[0] == "ATOM" or fields[0] == "HETATM" ):      # Only Look at Atom Rows
             atom = pars_pdb.Atom()                              # Make Atom
-            atom.load_pdb_line(line)                            # Load Line into Atom
+            atom.from_pdb_line(line)                            # Load Line into Atom
             
             if(sel_func(atom)):                                 # If Atom matches selection
-                atom = atom_edit(atom)                          #   Edit Atom
+                atom = atom_edit(atom)                     #   Edit Atom
             
-            new_line = atom.pdb_line()                          # Rewrite Line
+            new_line = atom.to_pdb_line()                          # Rewrite Line
             pdb_new.write(new_line+"\n")                        # 
         else:                                   
             pdb_new.write(line)                                 # Write Non-Atoms
@@ -61,6 +61,7 @@ def select_atoms(pdb_path_old,pdb_path_new,sel_func,atom_edit):
     return pdb_path_new
 
 
+    
 ## Edit Atom Functions ##
 
 def free_temperature_factor(atom):
