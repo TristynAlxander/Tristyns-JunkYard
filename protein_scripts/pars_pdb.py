@@ -1,8 +1,8 @@
 
+
 class Atom:
     
-    def __init__(self):
-        # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
+    def __init__(self,*args):
         self.atom_type      = "ATOM"    # Str
         self.atom_number    = None      # Unique Int, aside from alt_id
         self.atom_name      = ""        # Str 
@@ -21,10 +21,17 @@ class Atom:
         self.z_coordinate   = None      # float
         
         self.is_protein     = None
-        self.connects       = []        # Array of Atom_number
+        self.is_solvent     = None
+        self.connects       = []        # List of Atom
         self.charge         = None
+        self.mass           = None
         
-    def load_pdb_line(self,line):
+        if( (len(args)==1) and (type(args[0]) is str) ):
+            self.load_pdb_line(args[0])
+            
+    def from_pdb_line(self,line):
+        # TODO Note differences if for already filled fields
+        # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
         self.atom_type      =       line[ 0:6 ].strip()
         self.atom_number    = int(  line[ 6:11].strip())
         self.atom_name      =       line[12:16].strip()
@@ -40,17 +47,18 @@ class Atom:
         self.temp_factor    = float(line[60:66].strip())
         self.seg_id         =       line[72:76].strip()
         self.element        =       line[76:78].strip()
-    def pdb_line(self):
+    def to_pdb_line(self):
+        # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
         line = (
-              "{0:<6.6}".format(                self.atom_type    )
-            +   "{0:>5}".format(                self.atom_number  )
+              "{0:<6.6}".format(                 self.atom_type    )
+            +   "{0:>5}".format(                 self.atom_number  )
             + " "                                                  
-            + "{0:>4.4}".format("{0:3}".format( self.atom_name  ) )
-            + "{0:<1.1}".format(                self.alt_id       )
-            + "{0:>4.4}".format("{0:3}".format( self.res_name   ) )
-            + "{0:<1.1}".format(                self.chain_id     )
-            +   "{0:>4}".format(                self.res_number   )
-            + "{0:<1.1}".format(                self.insert_code  )
+            + "{0:>4.4}".format( "{0:3}".format( self.atom_name  ) )
+            + "{0:<1.1}".format(                 self.alt_id       )
+            + "{0:>4.4}".format( "{0:3}".format( self.res_name   ) )
+            + "{0:<1.1}".format(                 self.chain_id     )
+            +   "{0:>4}".format(                 self.res_number   )
+            + "{0:<1.1}".format(                 self.insert_code  )
             + "   "                                                
             + "{0:>8.3f}".format(                self.x_coordinate )
             + "{0:>8.3f}".format(                self.y_coordinate )
@@ -58,14 +66,117 @@ class Atom:
             + "{0:>6.2f}".format(                self.occupancy    )
             + "{0:>6.2f}".format(                self.temp_factor  )
             + "      "                                             
-            + "{0:<4.4}".format(                self.seg_id       )
-            + "{0:>2.2}".format(                self.element      )
+            + "{0:<4.4}".format(                 self.seg_id       )
+            + "{0:>2.2}".format(                 self.element      )
             )
         return line
+    def from_psf_line(self,line):
+        # Divide Line                                                           # No Consistent Division
+        fields = line.strip().split()                                           # Divide by White-Space
+        
+        #atom ID    segment name    residue ID  residue name    atom name   atom type   charge          mass            
+        # TODO Note differences if for already filled fields
+        self.atom_number    = int(fields[0])
+        self.seg_id         = fields[1]
+        self.res_number     = int(fields[2])().upper()
+        self.res_name       = int(fields[2])
+        self.atom_name
+        self.atom_type
+        self.charge         = None
+        self.mass           = None
+        # 11 = " "
+        self.seg_id         = int(  line[ 12:21].strip())
+        
+        self.atom_number    = int(  line[ 6:11].strip())
+        self.atom_name      =       line[12:16].strip()
+        self.alt_id         =       line[ 16  ].strip()
+        self.res_name       =       line[17:21].strip().upper()
+        self.chain_id       =       line[ 21  ].strip()
+        self.res_number     = int(  line[22:26].strip())
+        self.insert_code    =       line[ 26  ].strip()
+        self.x_coordinate   = float(line[30:38].strip())
+        self.y_coordinate   = float(line[38:46].strip())
+        self.z_coordinate   = float(line[46:54].strip())
+        self.occupancy      = float(line[54:60].strip())
+        self.temp_factor    = float(line[60:66].strip())
+        self.seg_id         =       line[72:76].strip()
+        self.element        =       line[76:78].strip()
+    def match_psf_line(self,line):
+        print("")# TODO
+    
+        
+class System:
+    
+    def __init__(self):
+        self.atom_array     = []
+        # TODO Add different file types
+    
+    def check(self):
+        print("Incomplete")
+        
+        # TODO Add Check non-solvent molecules have chains
+        # TODO Check Resid is continuous
+        
+        
+    def add_system(self,system):
+        print("Incomplete")
+        
+    def load_pdb(self,pdb_path):                                                    # Load (Initial) PDB File
+        # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
+        if(len(self.atom_array) != 0):                                              # Check Empty System
+            print("Warning (load_pdb): Overriding Existing System.")                # Warn User
+            self.atom_array = []                                                    # Overwrite System.
+        
+        
+        pdb_file     = open(pdb_path)                                               # Get  PDB  File
+        
+        for line in pdb_file:                                                       # Horizontal Split ( into rows    ) 
+            fields = line.strip().split()                                           # Vertical   Split ( into columns )
+            
+            if(fields[0] == "ATOM" or fields[0] == "HETATM"):                       # Narrow Scope: Atoms.
+                self.atom_array.append(Atom(line))                                  # Load Atoms
+            # TODO Add Defaults
+            # TODO Add Connects
+            # TODO Define Protein, Solvent, etc
+        
+        # TODO Resequence  
+        print("Incomplete Function.")   # TODO
     
     
     
-    
+    def load_psf(self,psf_path):
+        
+        is_new_system   = None
+        is_atom_field   = False
+        psf_file        = open(psf_path)                                            # Get  PSF  File
+        
+        for line in psf_file:                                                       # Horizontal Split ( into rows    ) 
+            fields = line.strip().split()                                           # Vertical   Split ( into columns )
+            
+            if(len(fields) >= 2 and fields[1] == "!NATOM"):                         # Find Atom List
+                psf_atom_count  = int(fields[0])                                    # Get psf  Atom Count
+                self_atom_count = len(self.atom_array)                              # Get self Atom Count
+                if(psf_atom_count == self_atom_count):                              # Use Same System
+                    is_new_system = False                                           # 
+                    print("Notice (load_psf): Same Atom Count")                     # 
+                    print("Notice (load_psf): Combining Files")                     # 
+                else:                                                               # Use New System
+                    is_new_system = True                                            # 
+                    print("Warning (load_psf): Different Atom Count")               # 
+                    print("Warning (load_psf): Overriding Existing System")         # 
+                    self.atom_array = []                                            # 
+            
+        print("Incomplete Function.")   # TODO
+    # PSF Files: atoms, bonds, angles, dihedrals, impropers
+    #atom ID    segment name    residue ID  residue name    atom name   atom type   charge          mass            
+    #1          PROA            25          GLU             N           NH3         -0.300000       14.0070           0   0.00000     -0.301140E-02
+    #       3   SEG             25          GLU             HT2         HC          0.330000        1.0080              0
+
+    # PSF Formats: CHARMM or X-PLOR
+    # Charmm uses numbers instead of atom_type
+    # Most things require atom order match exactly to pdb, so safe-ish assumption.
+    #
+
 # Tools for Processing PDB Files.
 # 
 # PDB Format Functions (below) via: 
