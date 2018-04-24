@@ -55,7 +55,7 @@ class Atom:
             + " "                                                  
             + "{0:>4.4}".format( "{0:3}".format( self.atom_name  ) )
             + "{0:<1.1}".format(                 self.alt_id       )
-            + "{0:>4.4}".format( "{0:3}".format( self.res_name   ) )
+            + "{0:<4.4}".format( "{0:>3}".format( self.res_name   ) )
             + "{0:<1.1}".format(                 self.chain_id     )
             +   "{0:>4}".format(                 self.res_number   )
             + "{0:<1.1}".format(                 self.insert_code  )
@@ -228,21 +228,21 @@ def line_to_pdb_atom(line):
     fields.append(line[76:78].strip())              # 14 str    Element Symbol
     return fields
 def print_atom_fields(fields):
-    print("{0:<30.30}{1}".format("ATOM: "               , fields[0]))        # 0  ATOM
-    print("{0:<30.30}{1}".format("Atom Number: "        , fields[1]))        # 1  Atom Serial Number
-    print("{0:<30.30}{1}".format("Atom Name: "          , fields[2]))        # 2  Atom Name
-    print("{0:<30.30}{1}".format("Alt Location: "       , fields[3]))        # 3  Alternate Location Indicator
-    print("{0:<30.30}{1}".format("Residue Name: "       , fields[4]))        # 4  Residue Name
-    print("{0:<30.30}{1}".format("Chain Id: "           , fields[5]))        # 5  Chain Identifier
-    print("{0:<30.30}{1}".format("Res Number: "         , fields[6]))        # 6  Residue Sequence Number
-    print("{0:<30.30}{1}".format("Insertion Code: "     , fields[7]))        # 7  Insertion Codes of Residues
-    print("{0:<30.30}{1}".format("X Coordinate: "       , fields[8]))        # 8  X Orthogonal A Coordinate
-    print("{0:<30.30}{1}".format("Y Coordinate: "       , fields[9]))        # 9  Y Orthogonal A Coordinate
-    print("{0:<30.30}{1}".format("Z Coordinate: "       , fields[10]))       # 10 Z Orthogonal A Coordinate
-    print("{0:<30.30}{1}".format("Occupancy: "          , fields[11]))       # 11 Occupancy
-    print("{0:<30.30}{1}".format("Temperature Factor: " , fields[12]))       # 12 Temperature Factor
-    print("{0:<30.30}{1}".format("Seg Id: "             , fields[13]))       # 13 Segment Identifier
-    print("{0:<30.30}{1}".format("Element: "            , fields[14]))       # 14 Element Symbol
+    print("{0:<30.30}{1}".format("ATOM: "               , fields[0].replace(" ","_")))        # 0  ATOM
+    print("{0:<30.30}{1}".format("Atom Number: "        , str(fields[1]).replace(" ","_")))        # 1  Atom Serial Number
+    print("{0:<30.30}{1}".format("Atom Name: "          , fields[2].replace(" ","_")))        # 2  Atom Name
+    print("{0:<30.30}{1}".format("Alt Location: "       , fields[3].replace(" ","_")))        # 3  Alternate Location Indicator
+    print("{0:<30.30}{1}".format("Residue Name: "       , fields[4].replace(" ","_")))        # 4  Residue Name
+    print("{0:<30.30}{1}".format("Chain Id: "           , fields[5].replace(" ","_")))        # 5  Chain Identifier
+    print("{0:<30.30}{1}".format("Res Number: "         , str(fields[6]).replace(" ","_")))        # 6  Residue Sequence Number
+    print("{0:<30.30}{1}".format("Insertion Code: "     , fields[7].replace(" ","_")))        # 7  Insertion Codes of Residues
+    print("{0:<30.30}{1}".format("X Coordinate: "       , str(fields[8])))        # 8  X Orthogonal A Coordinate
+    print("{0:<30.30}{1}".format("Y Coordinate: "       , str(fields[9])))        # 9  Y Orthogonal A Coordinate
+    print("{0:<30.30}{1}".format("Z Coordinate: "       , str(fields[10])))       # 10 Z Orthogonal A Coordinate
+    print("{0:<30.30}{1}".format("Occupancy: "          , str(fields[11])))       # 11 Occupancy
+    print("{0:<30.30}{1}".format("Temperature Factor: " , str(fields[12])))       # 12 Temperature Factor
+    print("{0:<30.30}{1}".format("Seg Id: "             , fields[13].replace(" ","_")))       # 13 Segment Identifier
+    print("{0:<30.30}{1}".format("Element: "            , fields[14].replace(" ","_")))       # 14 Element Symbol
 
 def pdb_atom_to_line(fields):
     # Check Types
@@ -316,7 +316,7 @@ def pdb_atom_to_line(fields):
             + " "                                                  
             + "{0:>4.4}".format("{0:3}".format( atom_name  ) )
             + "{0:<1.1}".format(                alt_id       )
-            + "{0:>4.4}".format("{0:3}".format( res_name   ) )
+            + "{0:<4.4}".format("{0:>3}".format( res_name   ) )
             + "{0:<1.1}".format(                chain_id     )
             +   "{0:>4}".format(                res_number   )
             + "{0:<1.1}".format(                insert_code  )
