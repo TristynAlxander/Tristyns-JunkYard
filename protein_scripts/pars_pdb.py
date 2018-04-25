@@ -29,6 +29,9 @@ class Atom:
         if( (len(args)==1) and (type(args[0]) is str) ):
             self.load_pdb_line(args[0])
             
+    def coordinates(self):
+        return [self.x_coordinate, self.y_coordinate, self.z_coordinate]
+        
     def from_pdb_line(self,line):
         # TODO Note differences if for already filled fields
         # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
