@@ -1,0 +1,11 @@
+
+mol load psf eq.psf dcd eq.dcd
+set nf [molinfo top get numframes]
+for {set i 0 } {$i < $nf} {incr i} {
+    # Last Frame
+    if {$i == $nf-1} {
+        [atomselect top all frame $i] writepdb last_frame.pdb
+        }
+    } 
+
+exit
