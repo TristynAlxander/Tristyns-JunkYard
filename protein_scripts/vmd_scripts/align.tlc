@@ -1,0 +1,15 @@
+
+# Align Target to Equilibration 
+
+mol new target.pdb
+mol new eq_ref.pdb
+
+set sel0 [atomselect 0 "resid 52 to 60 and name CA"] 	 
+set sel1 [atomselect 1 "resid 52 to 60 and name CA"] 	 
+
+set transformation_matrix [measure fit $sel0 $sel1]
+set move_sel [atomselect 0 "all"]
+$move_sel move $transformation_matrix
+$move_sel writepdb align_ref.pdb
+
+exit
