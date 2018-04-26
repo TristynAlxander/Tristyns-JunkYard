@@ -27,7 +27,7 @@ class Atom:
         self.mass           = None
         
         if( (len(args)==1) and (type(args[0]) is str) ):
-            self.load_pdb_line(args[0])
+            self.from_pdb_line(args[0])
             
     def coordinates(self):
         return [self.x_coordinate, self.y_coordinate, self.z_coordinate]
@@ -145,8 +145,64 @@ class System:
         # TODO Resequence  
         print("Incomplete Function.")   # TODO
     
+    def print_pdb(self,pdb_path):
+        pdb_new = open(pdb_path,"w+",newline='')                     # Make new PDB File
+        for atom in self.atom_array:
+            line = atom.to_pdb_line()
+            pdb_new.write(line+"\n")
+        pdb_new.write("END")
+        pdb_new.close()
+        
     
+    def reseq_atom_number(self):
+        atom_num = 0
+        for atom in self.atom_array:
+            atom_num = atom_num + 1
+            atom.atom_number = atom_num
+    def reseq_res_number(self):
+        
+        # Initial State
+        res_seq             = 0         # Initial Residue Number
+        last_res_name       = ""        # No Initial Residue
+        last_num_in         = ""        # No Initial Number
+        res_change          = True      # Change Initial Residue    (Set here for scope)
+        
+        for atom in self.atom_array:
+            
+            # Detect Residue Changes                                                    # Detect Residue Changes
+            new_res_name    = atom.res_name != last_res_name                            # Name Changes
+            new_res_num     = (str(atom.res_number)+atom.insert_code) != last_num_in    # Number & Insertion Code Changes
+            res_change      = new_res_name or new_res_num                               # Any Change
+            
+            # Store Current Residue                                                     # Store Current Residue
+            last_res_name = atom.res_name                                               # Residue Name
+            last_num_in   = (str(atom.res_number)+atom.insert_code)                     # Residue Number & Insertion Code
+            
+            # Resequence Residues
+            if(res_change):                                             # If Residue Changed
+                res_seq = res_seq + 1                                   #    Increment res_seq
+            atom.res_number = res_seq                                   # Set Residue Number
+            atom.insert_code = ""                                       # Strip Insertion Codes
+            res_change  = False                                         # Reset Change Signal
+    def reseq_chain(self):
+        # Initialize Chain Variables                                    # Initialize Chain Variables
+        last_chain      = ""                                            # No Initial Chain
+        chain_change    = True                                          # Change Initial Chain
+        chain_num       = -1                                            # Start Number - 1 = -1
+        
+        # Initialize Alphabet List                                      # Initialize Alphabet List
+        alphabet = []                                                   # Empty List
+        for letter in range(65, 91):                                    # Ascii Uppercase 
+            alphabet.append(chr(letter))                                # Make List
     
+        for atom in self.atom_array:
+            chain_change  = last_chain != atom.chain_id                 # Detect Chain Change
+            last_chain    = atom.chain_id                               # Store Chain
+            if(chain_change):                                           # 
+                chain_num = chain_num + 1                               # Increment Chain
+            atom.chain_id = alphabet[chain_num]                         # Set Chain
+            chain_change  = False                                       # Reset Chain Change Signal
+        
     def load_psf(self,psf_path):
         
         is_new_system   = None
