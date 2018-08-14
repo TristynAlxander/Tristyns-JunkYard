@@ -1,0 +1,1 @@
+source $WEST_SIM_ROOT/common/env.sh                                                 # Load Environmental Variables.
