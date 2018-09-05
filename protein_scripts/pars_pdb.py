@@ -1,3 +1,12 @@
+# Import
+
+import numpy as np
+import math
+
+# Imports for Main
+if (__name__ == "__main__"):
+    import os
+    import sys
 
 
 class Atom:
@@ -9,8 +18,8 @@ class Atom:
         self.element        = ""        # Str
         self.seg_id         = ""        # Str
         self.chain_id       = ""        # char
-        self.res_name       = ""        # Str
-        self.res_number     = None      # Int
+        self.residue_name   = ""        # Str
+        self.residue_number = None      # Int
         self.alt_id         = ""        # char 
         self.insert_code    = ""        # char
         self.occupancy      = 1         # float
@@ -22,16 +31,20 @@ class Atom:
         
         self.is_protein     = None
         self.is_solvent     = None
-        self.connects       = []        # List of Atom
+        self.connects       = []        # TODO: List of Atoms
         self.charge         = None
         self.mass           = None
         
-        if( (len(args)==1) and (type(args[0]) is str) ):
-            self.from_pdb_line(args[0])
+        if( (len(args)==1) and (type(args[0]) is str) ):                            # If given a pdb line
+            self.from_pdb_line(args[0])                                             # Convert to Atom
             
     def coordinates(self):
         return [self.x_coordinate, self.y_coordinate, self.z_coordinate]
-        
+    
+    
+    # Converters
+    
+    ## pdb
     def from_pdb_line(self,line):
         # TODO Note differences if for already filled fields
         # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
@@ -39,9 +52,9 @@ class Atom:
         self.atom_number    = int(  line[ 6:11].strip())
         self.atom_name      =       line[12:16].strip()
         self.alt_id         =       line[ 16  ].strip()
-        self.res_name       =       line[17:21].strip().upper()
+        self.residue_name   =       line[17:21].strip().upper()
         self.chain_id       =       line[ 21  ].strip()
-        self.res_number     = int(  line[22:26].strip())
+        self.residue_number = int(  line[22:26].strip())
         self.insert_code    =       line[ 26  ].strip()
         self.x_coordinate   = float(line[30:38].strip())
         self.y_coordinate   = float(line[38:46].strip())
@@ -53,38 +66,42 @@ class Atom:
     def to_pdb_line(self):
         # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
         line = (
-              "{0:<6.6}".format(                 self.atom_type    )
-            +   "{0:>5}".format(                 self.atom_number  )
-            + " "                                                  
-            + "{0:>4.4}".format( "{0:3}".format( self.atom_name  ) )
-            + "{0:<1.1}".format(                 self.alt_id       )
-            + "{0:<4.4}".format( "{0:>3}".format( self.res_name   ) )
-            + "{0:<1.1}".format(                 self.chain_id     )
-            +   "{0:>4}".format(                 self.res_number   )
-            + "{0:<1.1}".format(                 self.insert_code  )
+               "{0:<6.6}".format(                 self.atom_type      )
+            +    "{0:>5}".format(                 self.atom_number    )
+            +  " "                                                  
+            +  "{0:>4.4}".format(  "{0:3}".format(self.atom_name    ) )
+            +  "{0:<1.1}".format(                 self.alt_id         )
+            +  "{0:<4.4}".format( "{0:>3}".format(self.residue_name ) )
+            +  "{0:<1.1}".format(                 self.chain_id       )
+            +    "{0:>4}".format(                 self.residue_number )
+            +  "{0:<1.1}".format(                 self.insert_code    )
             + "   "                                                
-            + "{0:>8.3f}".format(                self.x_coordinate )
-            + "{0:>8.3f}".format(                self.y_coordinate )
-            + "{0:>8.3f}".format(                self.z_coordinate )
-            + "{0:>6.2f}".format(                self.occupancy    )
-            + "{0:>6.2f}".format(                self.temp_factor  )
+            + "{0:>8.3f}".format(                self.x_coordinate    )
+            + "{0:>8.3f}".format(                self.y_coordinate    )
+            + "{0:>8.3f}".format(                self.z_coordinate    )
+            + "{0:>6.2f}".format(                self.occupancy       )
+            + "{0:>6.2f}".format(                self.temp_factor     )
             + "      "                                             
-            + "{0:<4.4}".format(                 self.seg_id       )
-            + "{0:>2.2}".format(                 self.element      )
+            +  "{0:<4.4}".format(                 self.seg_id         )
+            +  "{0:>2.2}".format(                 self.element        )
             )
         return line
+    def add_pdb_line(self,line):
+        print("")# TODO
+    
+    ## psf
     def from_psf_line(self,line):
         # Divide Line                                                           # No Consistent Division
         fields = line.strip().split()                                           # Divide by White-Space
         
-        #atom ID    segment name    residue ID  residue name    atom name   atom type   charge          mass            
+        # atom ID    segment name    residue ID  residue name    atom name   atom type   charge          mass            
         # TODO Note differences if for already filled fields
         self.atom_number    = int(fields[0])
         self.seg_id         = fields[1]
-        self.res_number     = int(fields[2])().upper()
-        self.res_name       = int(fields[2])
-        self.atom_name
-        self.atom_type
+        self.residue_number     = int(fields[2])().upper()
+        self.residue_name       = int(fields[2])
+        self.atom_name      = None
+        self.atom_type      = None
         self.charge         = None
         self.mass           = None
         # 11 = " "
@@ -93,9 +110,9 @@ class Atom:
         self.atom_number    = int(  line[ 6:11].strip())
         self.atom_name      =       line[12:16].strip()
         self.alt_id         =       line[ 16  ].strip()
-        self.res_name       =       line[17:21].strip().upper()
+        self.residue_name       =       line[17:21].strip().upper()
         self.chain_id       =       line[ 21  ].strip()
-        self.res_number     = int(  line[22:26].strip())
+        self.residue_number     = int(  line[22:26].strip())
         self.insert_code    =       line[ 26  ].strip()
         self.x_coordinate   = float(line[30:38].strip())
         self.y_coordinate   = float(line[38:46].strip())
@@ -104,34 +121,563 @@ class Atom:
         self.temp_factor    = float(line[60:66].strip())
         self.seg_id         =       line[72:76].strip()
         self.element        =       line[76:78].strip()
-    def match_psf_line(self,line):
+    def to_psf_line(self):
         print("")# TODO
+    def add_psf_line(self,line):
+        print("")# TODO
+    
+    # Analysis
+    def is_water(self):
+        return (self.residue_name == "WAT" or self.residue_name == "HOH" or self.residue_name == "H2O")
     
         
 class System:
     
-    def __init__(self):
+    def __init__(self,*args):
         self.atom_array     = []
         # TODO Add different file types
-    
-    def check(self):
-        print("Incomplete")
         
+        
+        if( (len(args)==1) and (type(args[0]) is str) and (args[0][-4:] == ".pdb")):    # If given a pdb line
+            self.load_pdb(args[0])
+        
+    def select( self, 
+                atom_type       = None,
+                atom_number     = None,
+                atom_name       = None,
+                element         = None,
+                seg_id          = None,
+                chain_id        = None,
+                residue_name    = None,
+                residue_number  = None,
+                alt_id          = None,
+                insert_code     = None,
+                occupancy       = None,
+                temp_factor     = None,
+                
+                x_coordinate    = None,
+                x_high          = None,
+                x_low           = None,
+                y_coordinate    = None,
+                y_high          = None,
+                y_low           = None,
+                z_coordinate    = None,
+                z_high          = None,
+                z_low           = None,
+                
+                is_protein      = None,
+                is_solvent      = None,
+                connects        = None,
+                charge          = None,
+                mass            = None
+                ):
+        atom_list = []
+        
+        # Repair Chain Input
+        if((not chain_id == None) and (not type(chain_id) == list)):
+            chain_id = [chain_id]
+        
+        for a in self.atom_array:
+            get_atom    = ( ( ( atom_type      == None ) or ( a.atom_type      == atom_type      ) ) and 
+                            ( ( atom_number    == None ) or ( a.atom_number    == atom_number    ) ) and 
+                            ( ( atom_name      == None ) or ( a.atom_name      == atom_name      ) ) and 
+                            ( ( element        == None ) or ( a.element        == element        ) ) and 
+                            ( ( seg_id         == None ) or ( a.seg_id         == seg_id         ) ) and 
+                            ( ( chain_id       == None ) or ( a.chain_id       in chain_id       ) ) and 
+                            ( ( residue_name   == None ) or ( a.residue_name   == residue_name   ) ) and 
+                            ( ( residue_number == None ) or ( a.residue_number == residue_number ) ) and 
+                            ( ( alt_id         == None ) or ( a.alt_id         == alt_id         ) ) and 
+                            ( ( insert_code    == None ) or ( a.insert_code    == insert_code    ) ) and 
+                            ( ( occupancy      == None ) or ( a.occupancy      == occupancy      ) ) and 
+                            ( ( temp_factor    == None ) or ( a.temp_factor    == temp_factor    ) ) and 
+                            # Coordinate Conditions
+                            ( ( x_coordinate   == None ) or ( a.x_coordinate   == x_coordinate   ) ) and 
+                            ( ( x_high         == None ) or ( a.x_high         <  x_high         ) ) and 
+                            ( ( x_low          == None ) or ( a.x_low          >  x_low          ) ) and 
+                            ( ( y_coordinate   == None ) or ( a.y_coordinate   == y_coordinate   ) ) and 
+                            ( ( y_high         == None ) or ( a.y_high         <  y_high         ) ) and 
+                            ( ( y_low          == None ) or ( a.y_low          >  y_low          ) ) and 
+                            ( ( z_coordinate   == None ) or ( a.z_coordinate   == z_coordinate   ) ) and 
+                            ( ( z_high         == None ) or ( a.z_high         <  z_high         ) ) and 
+                            ( ( z_low          == None ) or ( a.z_low          >  z_low          ) ) and 
+                            
+                            ( ( is_protein     == None ) or ( a.is_protein     == is_protein     ) ) and 
+                            ( ( is_solvent     == None ) or ( a.is_solvent     == is_solvent     ) ) and 
+                            ( ( connects       == None ) or ( a.connects       == connects       ) ) and 
+                            ( ( charge         == None ) or ( a.charge         == charge         ) ) and 
+                            ( ( mass           == None ) or ( a.mass           == mass           ) ) )
+            # Add-to-List
+            if(get_atom):
+                atom_list.append(a)
+        return atom_list
+    
+    # System Analysis
+    def __radians_to_degrees__(radians):
+        degrees = []
+        for i in radians:
+            degrees.append(i*180/math.pi)
+        return degrees
+    def __list_to_dat__(list,path):                 # 
+        file = open(path,"w+")                      # 
+        for item in list:                           # ToDo: make sure is white space delimited if Matrix
+            file.write(str(item)+"\n")              # 
+        file.close()                                # 
+
+        
+    ## Bond Lengths by Dihedrals
+    def distance(atom1,atom2):
+        vec1   = np.array(atom1.coordinates())
+        vec2   = np.array(atom2.coordinates())
+        length = np.linalg.norm(np.subtract(vec1,vec2))
+        return length
+    
+    def distance_backbone_phi(self, residue_index,chain_id):
+        s1 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )         # Selection
+        s2 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )         #
+        if( s1==[] or s2==[] ):                                                                         # Verify Selection
+            return None                                                                                 #
+        else:                                                                                           #
+            if( len(s1)>1 or  len(s2)>1 ):                                                              #
+                print("Warning: Non-Unique Selection, Using First.")                                    #
+            return System.distance(s1[0],s2[0])                                                         # Return Distance
+    
+    def distance_backbone_psi(self, residue_index,chain_id):
+        s1 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )         # Selection
+        s2 = self.select( atom_name="C"  , residue_number=residue_index   , chain_id=chain_id )         #
+        if( s1==[] or s2==[] ):                                                                         # Verify Selection
+            return None                                                                                 #
+        else:                                                                                           #
+            if( len(s1)>1 or  len(s2)>1 ):                                                              #
+                print("Warning: Non-Unique Selection, Using First.")                                    #
+            return System.distance(s1[0],s2[0])                                                         # Return Distance
+            
+    def distance_backbone_omega(self, residue_index,chain_id):
+        s1 = self.select( atom_name="C"  , residue_number=residue_index-1 , chain_id=chain_id )         # Selection
+        s2 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )         #
+        if( s1==[] or s2==[] ):                                                                         # Verify Selection
+            return None                                                                                 #
+        else:                                                                                           #
+            if( len(s1)>1 or  len(s2)>1 ):                                                              #
+                print("Warning: Non-Unique Selection, Using First.")                                    #
+            return System.distance(s1[0],s2[0])                                                         # Return Distance
+    
+    
+    ## Angles by Backbone
+    def angle(atom1,atom2,atom3):
+        a1 = np.array(atom1.coordinates())                              # Get Atom Coordinates
+        a2 = np.array(atom2.coordinates())                              #
+        a3 = np.array(atom3.coordinates())                              #
+        
+        v1 = np.subtract(a1,a2.transpose())                             # Convert to Vectors
+        v2 = np.subtract(a3,a2.transpose())                             #
+        
+        v1_norm = np.linalg.norm(v1)                                    # Get Vector Normals
+        v2_norm = np.linalg.norm(v2)                                    # 
+        
+        return math.acos(float(np.dot(v1,v2))/float(v1_norm*v2_norm))   # Solve for Angle using Dot Product Cosine Equation 
+       
+    def angle_backbone_n(     self, residue_index, chain_id ):
+        s1 = self.select( atom_name="C"  , residue_number=residue_index-1 , chain_id=chain_id )         # Selection
+        s2 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )         #
+        s3 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )         #
+        if( s1==[] or s2==[] or s3==[] ):                                                               # Verify Selection
+            return None                                                                                 #
+        else:                                                                                           #
+            if( len(s1)>1 or  len(s2)>1 or len(s3)>1 ):                                                 #
+                print("Warning: Non-Unique Selection, Using First.")                                    #
+            return System.angle(s1[0],s2[0],s3[0])                                                      # Return Angle
+        
+    def backbone_angle_ca(    self, residue_index, chain_id ):
+        s1 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )         # Selection
+        s2 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )         #
+        s3 = self.select( atom_name="C"  , residue_number=residue_index   , chain_id=chain_id )         #
+        if( s1==[] or s2==[] or s3==[] ):                                                               # Verify Selection
+            return None                                                                                 #
+        else:                                                                                           #
+            if( len(s1)>1 or  len(s2)>1 or len(s3)>1 ):                                                 #
+                print("Warning: Non-Unique Selection, Using First.")                                    #
+            return System.angle(s1[0],s2[0],s3[0])                                                      # Return Angle
+        
+    def backbone_angle_co(    self, residue_index, chain_id ):
+        s1 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )         # Selection
+        s2 = self.select( atom_name="C"  , residue_number=residue_index   , chain_id=chain_id )         #
+        s3 = self.select( atom_name="N"  , residue_number=residue_index+1 , chain_id=chain_id )         #
+        if( s1==[] or s2==[] or s3==[] ):                                                               # Verify Selection
+            return None                                                                                 #
+        else:                                                                                           #
+            if( len(s1)>1 or  len(s2)>1 or len(s3)>1 ):                                                 #
+                print("Warning: Non-Unique Selection, Using First.")                                    #
+            return System.angle(s1[0],s2[0],s3[0])                                                      # Return Angle
+        
+        
+    
+    ## Dihedrals
+    def __vector_projection__(a,b,debug=False):
+        # Vector Projection Equation:
+        #   \text{proj}_{\vec{b}} \vec{a}  = \frac{\vec{a} \cdot \vec{b}}{|\vec{b}|^2} \vec{b}
+        
+        ### Debug / Break / Fix ###                                                                 ### Debug / Break / Fix ###
+        if(debug):
+            if(not (type(a) is list or type(a) is np.matrix)):                                      # Verify vector A is list or matrix
+                print("Vector Projection: First Input is Invalid Type.")                            # 
+                return None                                                                         # 
+            elif(not (type(b) is list or type(b) is np.matrix)):                                    # Verify vector B is list or matrix
+                print("Vector Projection: Second Input is Invalid Type.")                           # 
+                return None                                                                         # 
+            else:
+                if(type(a) is list):                                                                # Make Lists into Matrix
+                    a =  np.matrix(a)                                                               # 
+                    print("First List should be Matrix.")                                           # 
+                if(type(b) is list):                                                                # 
+                    b =  np.matrix(b)                                                               # 
+                    print("Second List should be Matrix.")                                          # 
+                
+                if(a.size != b.size):                                                               # Verify Vectors are the same size
+                    print("Vector Projection: Inputs must have same size" )                         # 
+                    print("First Vector, size " +str(a.size)+":\n"+str(a) )                         # 
+                    print("Second Vector, size "+str(b.size)+":\n"+str(b) )                         # 
+                    return None                                                                     # 
+                
+                if( (len(a.shape) != 2) or (not 1 in a.shape)):                                     # Verify Vectors have useful shape
+                    print("Vector Projection: First Vector has improper shape: " +str(a.shape))     # 
+                    return None                                                                     # 
+                if( (len(b.shape) != 2) or (not 1 in b.shape)):                                     # 
+                    print("Vector Projection: Second Vector has improper shape: "+str(b.shape))     # 
+                    return None                                                                     #
+                
+                if(a.shape[0] != 1):                                                                # Correct Transposed Shapes
+                    a = a.transpose()                                                               # 
+                    print("First Vector Needed to be transposed.")                                  #
+                if(b.shape[0] != 1):                                                                # 
+                    b = b.transpose()                                                               # 
+                    print("Second Vector Needed to be transposed.")                                 # 
+        
+        ### Calculate Projection ###                                                                ### Calculate Projection ###
+        
+        numerator   = np.dot(a,b.transpose())                                                       # Dot Products
+        denominator = np.dot(b,b.transpose())                                                       #
+        
+        numerator   = float(numerator)                                                              # Cast to Float
+        denominator = float(denominator)                                                            # 
+        
+        scalar = numerator/denominator                                                              # Calculate Scalar
+        
+        solution = np.inner(scalar,b)                                                               # Calculate Solution
+        return solution                                                                             # Return Solution
+    
+    def __plane_projection__(a,normal,debug=False):
+        # Plane Projection Equation:
+        #   \text{proj}_{P} \vec{a}  = \vec{a} - \text{proj}_{\vec{n}} \vec{a}
+        #   
+        #   Where \vec{n} is the normal vector to plane P
+        # 
+        
+        
+        ### Debug / Break / Fix ###                                                             ### Debug / Break / Fix ###
+        if(debug):
+            if(not (type(a) is list or type(a) is np.matrix)):                                      # Verify vector A is list or matrix
+                print("Vector Projection: First Input is Invalid Type.")                            # 
+                return None                                                                         # 
+            elif(not (type(normal) is list or type(normal) is np.matrix)):                          # Verify vector B is list or matrix
+                print("Vector Projection: Normal Vector is Invalid Type.")                          # 
+                return None                                                                         # 
+            else:
+                if(type(a) is list):                                                                # Make Lists into Matrix
+                    a =  np.matrix(a)                                                               # 
+                    print("First List should be Matrix.")                                           # 
+                if(type(normal) is list):                                                           # 
+                    normal =  np.matrix(normal)                                                     # 
+                    print("Normal List should be Matrix.")                                          # 
+                
+                if(a.size != normal.size):                                                          # Verify Vectors are the same size
+                    print("Vector Projection: Inputs must have same size" )                         # 
+                    print("First Vector, size " +str(a.size)+":\n"+str(a) )                         # 
+                    print("Normal Vector, size "+str(normal.size)+":\n"+str(normal) )               # 
+                    return None                                                                     # 
+                
+                if( (len(a.shape) != 2) or (not 1 in a.shape)):                                     # Verify Vectors have useful shape
+                    print("Vector Projection: First Vector has improper shape: " +str(a.shape))     # 
+                    return None                                                                     # 
+                if( (len(normal.shape) != 2) or (not 1 in normal.shape)):                           # 
+                    print("Vector Projection: Normal Vector has improper shape: "+str(b.shape))     # 
+                    return None                                                                     #
+                
+                if(a.shape[0] != 1):                                                                # Correct Transposed Shapes
+                    a = a.transpose()                                                               # 
+                    print("First Vector Needed to be transposed.")                                  #
+                if(normal.shape[0] != 1):                                                           # 
+                    normal = normal.transpose()                                                     # 
+                    print("Normal Vector Needed to be transposed.")                                 # 
+        
+        ### Calculate Projection ###                                                                ### Calculate Projection ###
+        return np.subtract(a,System.__vector_projection__(a,normal))
+    
+    def __dihedral_angle__(a,b,c,d,debug=False):
+        # Given Dihedral 
+        #  a       d
+        #   \     /
+        #    b---c
+        #
+        # Projection Plane
+        #  a             d
+        #   \           /
+        #    \    |    /
+        #     b---|---c
+        #  front  |  back
+        #
+        #  Testing Example
+        #  <--- z-axis --->
+        #  a             d
+        #   \           /
+        #    \    |    /
+        #     b---|---c
+        #         |
+        #      x,y-plane
+        """
+        # To Test Replace x,y with unit circle values
+        #               x  y  z
+        a =  np.matrix([0, 1, 1])
+        b =  np.matrix([0, 0, 2])
+        c =  np.matrix([0, 0, 4])
+        d =  np.matrix([x, y, 5])
+        """
+        
+        if(debug):
+            if(not (type(a) is list or type(a) is np.matrix)):                                      # Verify vector A is list or matrix
+                return None                                                                         # 
+            elif(not (type(b) is list or type(b) is np.matrix)):                                    # Verify vector B is list or matrix
+                return None                                                                         # 
+            elif(not (type(c) is list or type(c) is np.matrix)):                                    # Verify vector B is list or matrix
+                return None                                                                         # 
+            elif(not (type(d) is list or type(d) is np.matrix)):                                    # Verify vector B is list or matrix
+                return None                                                                         # 
+            else:
+                if(type(a) is list):                                                                # Make Lists into Matrix
+                    a = np.matrix(a)                                                                # 
+                if(type(b) is list):                                                                # 
+                    b = np.matrix(b)                                                                # 
+                if(type(c) is list):                                                                # 
+                    c = np.matrix(c)                                                                # 
+                if(type(d) is list):                                                                # 
+                    d = np.matrix(d)                                                                # 
+                
+                if(a.size != 3):                                                                    # Verify Vectors are a reasonable size
+                    print("Need a 3D vector, not size: "+str(a.size) )                              # 
+                    return None                                                                     # 
+                if(b.size != 3):                                                                    # Verify Vectors are a reasonable size
+                    print("Need a 3D vector, not size: "+str(b.size) )                              # 
+                    return None                                                                     # 
+                if(c.size != 3):                                                                    # Verify Vectors are a reasonable size
+                    print("Need a 3D vector, not size: "+str(c.size) )                              # 
+                    return None                                                                     # 
+                if(d.size != 3):                                                                    # Verify Vectors are a reasonable size
+                    print("Need a 3D vector, not size: "+str(d.size) )                              # 
+                    return None                                                                     # 
+                
+                if( (len(a.shape) != 2) or (not 1 in a.shape)):                                     # Verify Vectors have useful shape
+                    print("Vector Projection: First Vector has improper shape: " +str(a.shape))     # 
+                    return None                                                                     # 
+                if( (len(b.shape) != 2) or (not 1 in b.shape)):                                     # 
+                    print("Vector Projection: Second Vector has improper shape: "+str(b.shape))     # 
+                    return None                                                                     # 
+                if( (len(c.shape) != 2) or (not 1 in c.shape)):                                     # 
+                    print("Vector Projection: Third Vector has improper shape: "+str(c.shape))      # 
+                    return None                                                                     # 
+                if( (len(d.shape) != 2) or (not 1 in d.shape)):                                     # 
+                    print("Vector Projection: Fourth Vector has improper shape: "+str(d.shape))     # 
+                    return None                                                                     #
+                
+                if(a.shape[0] != 1):                                                                # Correct Transposed Shapes
+                    a = a.transpose()                                                               #
+                if(b.shape[0] != 1):                                                                # 
+                    b = b.transpose()                                                               # 
+                if(c.shape[0] != 1):                                                                # 
+                    c = c.transpose()                                                               # 
+                if(d.shape[0] != 1):                                                                # 
+                    d = d.transpose()                                                               # 
+        
+        b_to_a            = np.subtract(b,a)                                            # Get Appropriate Vectors
+        b_to_c            = np.subtract(b,c)                                            # 
+        c_to_b            = np.subtract(c,b)                                            # 
+        c_to_d            = np.subtract(c,d)                                            # 
+        
+        perpendicular     = c_to_b                                                      # TODO: Is this the right perpendicular? c_to_b
+        
+        unit_normal       = np.dot(perpendicular , 1/np.linalg.norm(perpendicular) )    # Unit Normal, to make everything a scale properly.
+        
+        front_projection  = System.__plane_projection__( b_to_a , unit_normal )                # Front & Back Projections
+        back_projection   = System.__plane_projection__( c_to_d , unit_normal )                # See Diagram above. 
+        
+        cross_product    = np.cross(front_projection,back_projection)                   # Sine component of the determinant
+        determinant      = np.dot(unit_normal,cross_product.transpose())                # Determinant is proportional to sine
+        dot_product      = np.dot(front_projection,back_projection.transpose())         # Dot-Product is proportional to cosine
+        
+        theta = math.atan2(determinant, dot_product)                                    # Get Angle
+        
+        return theta
+        
+    def atom_dihedral( atom1, atom2, atom3, atom4):
+        a = np.matrix( atom1.coordinates() )
+        b = np.matrix( atom2.coordinates() )
+        c = np.matrix( atom3.coordinates() )
+        d = np.matrix( atom4.coordinates() )
+        return System.__dihedral_angle__(a,b,c,d)
+    
+    # http://www.ccp14.ac.uk/ccp/web-mirrors/garlic/garlic/commands/dihedrals.html
+    
+    def dihedral_phi(self, residue_index, chain_id):
+        s1 = self.select( atom_name="C"  , residue_number=residue_index-1 , chain_id=chain_id )     # Selection
+        s2 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )     #
+        s3 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )     #
+        s4 = self.select( atom_name="C"  , residue_number=residue_index   , chain_id=chain_id )     #
+        if( s1==[] or s2==[] or s3==[] or s4==[] ):                                                 # Verify Selection
+            return None                                                                             #
+        else:                                                                                       #
+            if( len(s1)>1 or  len(s2)>1 or len(s3)>1 or len(s4)>1):                                 #
+                print("Warning: Non-Unique Selection, Using First.")                                #
+            return System.atom_dihedral(s1[0],s2[0],s3[0],s4[0])                                    # Return Dihedral
+        
+    def dihedral_psi(self, residue_index, chain_id):
+        s1 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )     # Selection
+        s2 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )     #
+        s3 = self.select( atom_name="C"  , residue_number=residue_index   , chain_id=chain_id )     #
+        s4 = self.select( atom_name="N"  , residue_number=residue_index+1 , chain_id=chain_id )     #
+        if( s1==[] or s2==[] or s3==[] or s4==[] ):                                                 # Verify Selection
+            return None                                                                             #
+        else:                                                                                       #
+            if( len(s1)>1 or  len(s2)>1 or len(s3)>1 or len(s4)>1):                                 #
+                print("Warning: Non-Unique Selection, Using First.")                                #
+            return System.atom_dihedral(s1[0],s2[0],s3[0],s4[0])                                    # Return Dihedral
+    
+    def dihedral_omega(self, residue_index, chain_id):
+        s1 = self.select( atom_name="CA" , residue_number=residue_index-1 , chain_id=chain_id )     # Selection
+        s2 = self.select( atom_name="C"  , residue_number=residue_index-1 , chain_id=chain_id )     #
+        s3 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )     #
+        s4 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )     #
+        if( s1==[] or s2==[] or s3==[] or s4==[] ):                                                 # Verify Selection
+            return None                                                                             #
+        else:                                                                                       #
+            if( len(s1)>1 or  len(s2)>1 or len(s3)>1 or len(s4)>1):                                 #
+                print("Warning: Non-Unique Selection, Using First.")                                #
+            return System.atom_dihedral(s1[0],s2[0],s3[0],s4[0])                                    # Return Dihedral
+        
+    
+    def get_residue(self, residue_index, chain_id):
+        s1 = self.select( atom_name="CA" , residue_number=residue_index , chain_id=chain_id )       # Selection
+        if( s1==[] ):                                                                               # Verify Selection
+            return None                                                                             #
+        else:                                                                                       #
+            if( len(s1)>1 ):                                                                        #
+                print("Warning: Non-Unique Selection, Using First.")                                #
+            return s1[0].residue_name                                                               # Return Dihedral
+    
+    def residue_count(self, chain_id):
+        # Initial States                                                                                    # Initial States
+        residue_count       = 0                                                                             #   Initial Residue Count
+        last_residue_name   = ""                                                                            #   No Initial Residue
+        last_residue_number = ""                                                                            #   No Initial Number
+        for atom in self.atom_array:                                                                        # Loop
+            if(atom.chain_id == chain_id):                                                                  # Limit Interest
+                # Detect Residue Changes                                                                    # Detect Residue Changes
+                new_residue_name    = atom.residue_name                           != last_residue_name      #   Name Changes
+                new_residue_number  = (str(atom.residue_number)+atom.insert_code) != last_residue_number    #   Number or Insertion Code Changes
+                residue_change      = new_residue_name or new_residue_number                                #   Either Change
+                # Increment Count                                                                           # Increment Count
+                if(residue_change):                                                                         #
+                    residue_count = residue_count + 1                                                       #
+                # Store Residue                                                                             # Store Residue
+                last_residue_name   = atom.residue_name                                                     #   Residue Name
+                last_residue_number = (str(atom.residue_number)+atom.insert_code)                           #   Residue Number & Insertion Code
+                last_chain          = atom.chain_id                                                         #   Chain
+        return residue_count                                                                                # Return Count
+    
+    # Modify System 
+    def renumber_atoms(self):
+        atom_num = 0
+        for atom in self.atom_array:
+            atom_num = atom_num + 1
+            atom.atom_number = atom_num
+    
+    
+    def renumber_residues(self):
+        self.renumber_residues_by_chain()
+    
+    def renumber_residues_by_chain(self):
+        # Initial States                                                                                # Initial States
+        residue_number      = 0                                                                         #   Initial Residue Number
+        last_residue_name   = ""                                                                        #   No Initial Residue
+        last_residue_number = ""                                                                        #   No Initial Number
+        last_chain          = ""                                                                        #   No Initial Chain
+        for atom in self.atom_array:                                                                    # 
+            # Detect Changes                                                                            # Detect Change
+            chain_change  = last_chain != atom.chain_id                                                 #   Chain Changes
+            new_residue_name    = atom.residue_name != last_residue_name                                #   Residue Name Changes
+            new_residue_number  = (str(atom.residue_number)+atom.insert_code) != last_residue_number    #   Residue Number & Insertion Code Changes
+            residue_change      = new_residue_name or new_residue_number or chain_change                #   Any Change
+            # Store Last State                                                                          # Store Last State
+            last_chain          = atom.chain_id                                                         #   Chain
+            last_residue_name   = atom.residue_name                                                     #   Residue Name
+            last_residue_number = (str(atom.residue_number)+atom.insert_code)                           #   Residue Number & Insertion Code
+            # Reset Residue Number                                                                      # Reset Residue Number
+            if(chain_change):                                                                           #
+                residue_number = 0                                                                      #
+            # Renumber Residues                                                                         # Renumber Residues
+            if(residue_change):                                                                         #   If Residue Changed
+                residue_number = residue_number + 1                                                     #   Increment residue_number
+            atom.residue_number = residue_number                                                        # Set Residue Number
+            atom.insert_code = ""                                                                       # Strip Insertion Codes
+            
+    def renumber_residues_all(self):
+        # Initial State                                                                                 # Initial State
+        residue_number      = 0                                                                         # Initial Residue Number
+        last_residue_name   = ""                                                                        # No Initial Residue
+        last_residue_number = ""                                                                        # No Initial Number
+        for atom in self.atom_array:                                                                    # 
+            # Detect Changes                                                                            # Detect Changes
+            new_residue_name    = atom.residue_name != last_residue_name                                #   Name Changes
+            new_residue_number     = (str(atom.residue_number)+atom.insert_code) != last_residue_number #   Number & Insertion Code Changes
+            residue_change      = new_residue_name or new_residue_number                                #   Any Change
+            # Store Last State                                                                          # Store Last State
+            last_residue_name   = atom.residue_name                                                     #   Residue Name
+            last_residue_number = (str(atom.residue_number)+atom.insert_code)                           #   Residue Number & Insertion Code
+            # Renumber Residues                                                                         # Renumber Residues
+            if(residue_change):                                                                         #   If Residue Changed
+                residue_number = residue_number + 1                                                     #   Increment residue_number
+            atom.residue_number = residue_number                                                        # Set Residue Number
+            atom.insert_code = ""                                                                       # Strip Insertion Codes
+            
+    def reseq_chain(self):
+        # Initialize Chain Variables                                    # Initialize Chain Variables
+        last_chain      = ""                                            # No Initial Chain
+        chain_num       = -1                                            # Start Number - 1 = -1
+        ALPHABET = [chr(ascii) for ascii in range(65, 91)]              # Alphabet List
+        for atom in self.atom_array:                                    #
+            chain_change  = last_chain != atom.chain_id                 # Detect Chain Change
+            last_chain    = atom.chain_id                               # Store Chain
+            if(chain_change):                                           # 
+                chain_num = chain_num + 1                               # Increment Chain
+            atom.chain_id = ALPHABET[chain_num]                         # Set Chain
+            
+    def check(self):
+        print("")
         # TODO Add Check non-solvent molecules have chains
         # TODO Check Resid is continuous
-        
-        
     def add_system(self,system):
         print("Incomplete")
+        # Will Combine Systems.
+    
+    def strip_water(self):
+        self.atom_array[:] = [x for x in self.atom_array if not x.is_water()]
         
+    # pdb
     def load_pdb(self,pdb_path):                                                    # Load (Initial) PDB File
         # https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
+        
         if(len(self.atom_array) != 0):                                              # Check Empty System
             print("Warning (load_pdb): Overriding Existing System.")                # Warn User
             self.atom_array = []                                                    # Overwrite System.
         
-        
-        pdb_file     = open(pdb_path)                                               # Get  PDB  File
+        pdb_file = open(pdb_path)                                                   # Get  PDB  File
         
         for line in pdb_file:                                                       # Horizontal Split ( into rows    ) 
             fields = line.strip().split()                                           # Vertical   Split ( into columns )
@@ -143,66 +689,17 @@ class System:
             # TODO Define Protein, Solvent, etc
         
         # TODO Resequence  
-        print("Incomplete Function.")   # TODO
-    
+        print("Incomplete Function Used: load_pdb")   # TODO
     def print_pdb(self,pdb_path):
         pdb_new = open(pdb_path,"w+",newline='')                     # Make new PDB File
         for atom in self.atom_array:
+            # ToDo: Check if need to insert Terminal
             line = atom.to_pdb_line()
             pdb_new.write(line+"\n")
         pdb_new.write("END")
         pdb_new.close()
-        
     
-    def reseq_atom_number(self):
-        atom_num = 0
-        for atom in self.atom_array:
-            atom_num = atom_num + 1
-            atom.atom_number = atom_num
-    def reseq_res_number(self):
-        
-        # Initial State
-        res_seq             = 0         # Initial Residue Number
-        last_res_name       = ""        # No Initial Residue
-        last_num_in         = ""        # No Initial Number
-        res_change          = True      # Change Initial Residue    (Set here for scope)
-        
-        for atom in self.atom_array:
-            
-            # Detect Residue Changes                                                    # Detect Residue Changes
-            new_res_name    = atom.res_name != last_res_name                            # Name Changes
-            new_res_num     = (str(atom.res_number)+atom.insert_code) != last_num_in    # Number & Insertion Code Changes
-            res_change      = new_res_name or new_res_num                               # Any Change
-            
-            # Store Current Residue                                                     # Store Current Residue
-            last_res_name = atom.res_name                                               # Residue Name
-            last_num_in   = (str(atom.res_number)+atom.insert_code)                     # Residue Number & Insertion Code
-            
-            # Resequence Residues
-            if(res_change):                                             # If Residue Changed
-                res_seq = res_seq + 1                                   #    Increment res_seq
-            atom.res_number = res_seq                                   # Set Residue Number
-            atom.insert_code = ""                                       # Strip Insertion Codes
-            res_change  = False                                         # Reset Change Signal
-    def reseq_chain(self):
-        # Initialize Chain Variables                                    # Initialize Chain Variables
-        last_chain      = ""                                            # No Initial Chain
-        chain_change    = True                                          # Change Initial Chain
-        chain_num       = -1                                            # Start Number - 1 = -1
-        
-        # Initialize Alphabet List                                      # Initialize Alphabet List
-        alphabet = []                                                   # Empty List
-        for letter in range(65, 91):                                    # Ascii Uppercase 
-            alphabet.append(chr(letter))                                # Make List
-    
-        for atom in self.atom_array:
-            chain_change  = last_chain != atom.chain_id                 # Detect Chain Change
-            last_chain    = atom.chain_id                               # Store Chain
-            if(chain_change):                                           # 
-                chain_num = chain_num + 1                               # Increment Chain
-            atom.chain_id = alphabet[chain_num]                         # Set Chain
-            chain_change  = False                                       # Reset Chain Change Signal
-        
+    # psf
     def load_psf(self,psf_path):
         
         is_new_system   = None
@@ -309,9 +806,9 @@ def pdb_atom_to_line(fields):
     atom_number  = fields[1]
     atom_name    = fields[2]
     alt_id       = fields[3]
-    res_name     = fields[4]
+    residue_name     = fields[4]
     chain_id     = fields[5]
-    res_number   = fields[6]
+    residue_number   = fields[6]
     insert_code  = fields[7]
     x_coordinate = fields[8]
     y_coordinate = fields[9]
@@ -375,9 +872,9 @@ def pdb_atom_to_line(fields):
             + " "                                                  
             + "{0:>4.4}".format("{0:3}".format( atom_name  ) )
             + "{0:<1.1}".format(                alt_id       )
-            + "{0:<4.4}".format("{0:>3}".format( res_name   ) )
+            + "{0:<4.4}".format("{0:>3}".format( residue_name   ) )
             + "{0:<1.1}".format(                chain_id     )
-            +   "{0:>4}".format(                res_number   )
+            +   "{0:>4}".format(                residue_number   )
             + "{0:<1.1}".format(                insert_code  )
             + "   "                                                
             + "{0:>8.3f}".format(               x_coordinate )
@@ -410,3 +907,98 @@ def pdb_ter_to_line(fields):
         +"{0:<1.1}   ".format(fields[5])      # 5  Insertion Codes of Residues
         )
     return line
+
+if __name__ == "__main__":
+    print("Testing...\n")
+    x = System("4ncu.pdb")
+    
+    x.strip_water()
+    x.renumber_atoms()
+    x.renumber_residues()
+    x.reseq_chain()
+    #x.print_pdb("new.pdb")
+    
+    path = "table.dat"
+    file = open(path,"w+")
+    
+    title_line = "{0:<9.9}{1:<9.9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}\n".format( "chain", "residue", "C-N","N-Ca","Ca-C", "<N","<Ca","<C", "omega","phi","psi")
+    file.write(title_line)
+    
+    phi_list = []
+    psi_list = []
+    res_list = []
+    
+    # Iterate over Alphabet                                         # Iterate over Alphabet 
+    for ascii in range(65, 91):                                     # Iterate over Ascii Uppercase 
+        letter = chr(ascii)
+        
+        for residue_number in range(1,x.residue_count(letter)):
+            
+            # Bond Lengths
+            n_to_ca = x.distance_backbone_phi(     residue_number, letter)
+            ca_to_c = x.distance_backbone_psi(    residue_number, letter)
+            c_to_n  = x.distance_backbone_omega(     residue_number, letter)
+            
+            if(n_to_ca == None):
+                n_to_ca = "None"
+            else:
+                n_to_ca = round(n_to_ca,3)
+            if(ca_to_c == None):
+                ca_to_c = "None"
+            else:
+                ca_to_c = round(ca_to_c,3)
+            if(c_to_n == None):
+                c_to_n = "None"
+            else:
+                c_to_n = round(c_to_n,3)
+            
+            
+            # Angles
+            angle_n  = x.angle_backbone_n(  residue_number, letter )
+            angle_ca = x.backbone_angle_ca( residue_number, letter )
+            angle_co = x.backbone_angle_co( residue_number, letter )
+            
+            if(angle_n == None):
+                angle_n = "None"
+            else:
+                angle_n = round(angle_n,3)
+            if(angle_ca == None):
+                angle_ca = "None"
+            else:
+                angle_ca = round(angle_ca,3)
+            if(angle_co == None):
+                angle_co = "None"
+            else:
+                angle_co = round(angle_co,3)
+            
+            
+            # Dihedrals
+            phi = x.dihedral_phi(   residue_number, letter )
+            psi = x.dihedral_psi(   residue_number, letter )
+            omg = x.dihedral_omega( residue_number, letter )
+            
+            if(phi == None):
+                phi = "None"
+            else:
+                phi = round(phi,3)
+            if(psi == None):
+                psi = "None"
+            else:
+                psi = round(psi,3)
+            if(omg == None):
+                omg = "None"
+            else:
+                omg = round(omg,3)
+            
+            phi_list.append(phi)
+            psi_list.append(psi)
+            res_list.append(x.get_residue(residue_number, letter))
+            
+            line = "{0:<9.9}{1:<9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}\n".format( letter, residue_number, c_to_n, n_to_ca, ca_to_c, angle_n, angle_ca, angle_co, omg, phi, psi)
+            file.write(line)
+            
+    file.close()  
+    System.__list_to_dat__(phi_list,"phi.dat")
+    System.__list_to_dat__(psi_list,"psi.dat")
+    System.__list_to_dat__(res_list,"res.dat")
+    

@@ -1,5 +1,5 @@
 # Imports
-#import pars_pdb
+import pars_pdb
 import MDAnalysis
 import numpy as np
 import math
@@ -173,7 +173,7 @@ def get_phi_angle( system, res_index ):
     for ts in system.trajectory:                                                            # 
         dihedral_angle_list.append( dihedral_angle(atom_C0.position, atom_N.position, atom_CA.position, atom_C1.position) )
     return dihedral_angle_list                                                              # 
-
+    
 def get_psi_angle( system, res_index ):
     ### Selection Syntax to Select Atoms ###                                                ### Selection Syntax to Select Atoms ###
     atom_N  = system.select_atoms("name N  and resid " + str(res_index  ))[0]               # 
@@ -205,7 +205,7 @@ def get_chi1_angle( system, res_index ):
     atom_N  = system.select_atoms("name N  and resid " + str(res_index))[0]                 # 
     atom_CA = system.select_atoms("name CA and resid " + str(res_index))[0]                 # 
     atom_CB = system.select_atoms("name CB and resid " + str(res_index))[0]                 # 
-    atom_CG = system.select_atoms("name CG1 and resid " + str(res_index))[0]                 # 
+    atom_CG = system.select_atoms("name CG1 and resid " + str(res_index))[0]                # 
     #if((atom_CB == None) or (atom_CG == None)):
         #return None
     
@@ -217,10 +217,10 @@ def get_chi1_angle( system, res_index ):
 def list_to_dat(list,path):                     # 
     file = open(path,"w+")                      # 
     for item in list:                           # 
-        file.write(str(item)+"\n")                        # 
+        file.write(str(item)+"\n")              # 
     file.close()                                # 
 
-def radians_to_degrees(radians):
+def __radians_to_degrees__(radians):
     degrees = []
     for i in radians:
         degrees.append(i*180/math.pi)
