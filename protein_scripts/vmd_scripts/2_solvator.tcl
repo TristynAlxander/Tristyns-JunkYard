@@ -38,7 +38,5 @@ puts $outfile $center
 puts $outfile $size
 close $outfile
 
-
-
 # Exit
 quit

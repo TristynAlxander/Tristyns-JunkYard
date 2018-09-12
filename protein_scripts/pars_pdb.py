@@ -921,7 +921,7 @@ if __name__ == "__main__":
     path = "table.dat"
     file = open(path,"w+")
     
-    title_line = "{0:<9.9}{1:<9.9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}\n".format( "chain", "residue", "C-N","N-Ca","Ca-C", "<N","<Ca","<C", "omega","phi","psi")
+    title_line = "{0:<9.9}{1:<9.9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}{11:<9.9}\n".format( "chain", "residue", "AA", "C-N","N-Ca","Ca-C", "<N","<Ca","<C", "omega","phi","psi")
     file.write(title_line)
     
     phi_list = []
@@ -992,9 +992,10 @@ if __name__ == "__main__":
             
             phi_list.append(phi)
             psi_list.append(psi)
-            res_list.append(x.get_residue(residue_number, letter))
+            res = x.get_residue(residue_number, letter)
+            res_list.append(res)
             
-            line = "{0:<9.9}{1:<9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}\n".format( letter, residue_number, c_to_n, n_to_ca, ca_to_c, angle_n, angle_ca, angle_co, omg, phi, psi)
+            line = "{0:<9.9}{1:<9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}{11:<9.9}\n".format( letter, residue_number, res, c_to_n, n_to_ca, ca_to_c, angle_n, angle_ca, angle_co, omg, phi, psi)
             file.write(line)
             
     file.close()  

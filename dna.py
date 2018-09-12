@@ -5,6 +5,22 @@ if (__name__ == "__main__"):
 
 import re
 
+RESTRICTION_SITES = {
+    "BamHI":("ggatcc","cctagg"),
+    "XbaI":("tctaga","agatct"),
+    "XhoI":("ctcgag","gagctc")
+    }
+def get_bad_dna(dna_seq):
+    dna_seq = flatten_str(dna_seq)                                                              # Make DNA Readable
+    bad_sites = {}                                                                              # 
+    for enzyme, sites in RESTRICTION_SITES.items():                                             # Iterate over restriction sites
+        list = []                                                                               #
+        list.extend([index.start() for index in re.finditer('(?='+sites[0]+')', dna_seq)])      # Find Restriction Sites Forward/Reverse
+        list.extend([index.start() for index in re.finditer('(?='+sites[1]+')', dna_seq)])      # Find Restriction Sites Reverse/Forward
+        if(list != [] and list != None):                                                        # Document Finds
+            bad_sites[enzyme] = list                                                            #
+    return bad_sites                                                                            # Return Finds
+        
 def flatten_str(seq):
     seq = seq.lower()
     seq = seq.replace(" ","")
@@ -42,4 +58,4 @@ else:
     
     """
     
-print(get_pretty_dna(seq))
+print(get_bad_dna(seq))
