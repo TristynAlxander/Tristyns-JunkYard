@@ -86,7 +86,7 @@ class Atom:
             +  "{0:>2.2}".format(                 self.element        )
             )
         return line
-    def add_pdb_line(self,line):
+    def add_from_pdb_line(self,line):
         print("")# TODO
     
     ## psf
@@ -123,7 +123,7 @@ class Atom:
         self.element        =       line[76:78].strip()
     def to_psf_line(self):
         print("")# TODO
-    def add_psf_line(self,line):
+    def add_from_psf_line(self,line):
         print("")# TODO
     
     # Analysis
@@ -135,11 +135,9 @@ class System:
     
     def __init__(self,*args):
         self.atom_array     = []
-        # TODO Add different file types
-        
-        
-        if( (len(args)==1) and (type(args[0]) is str) and (args[0][-4:] == ".pdb")):    # If given a pdb line
-            self.load_pdb(args[0])
+        # TODO Add different file types                                                 # TODO: Add different file types
+        if( (len(args)==1) and (type(args[0]) is str) and (args[0][-4:] == ".pdb")):    # If PDB File
+            self.load_pdb(args[0])                                                      #   Load as PDB
         
     def select( self, 
                 atom_type       = None,
@@ -173,8 +171,8 @@ class System:
                 ):
         atom_list = []
         
-        # Repair Chain Input
-        if((not chain_id == None) and (not type(chain_id) == list)):
+        # Interpret Chain Requests.
+        if((chain_id != None) and (type(chain_id) != list)):
             chain_id = [chain_id]
         
         for a in self.atom_array:
@@ -213,10 +211,17 @@ class System:
     
     # System Analysis
     def __radians_to_degrees__(radians):
-        degrees = []
-        for i in radians:
-            degrees.append(i*180/math.pi)
-        return degrees
+        if(type(radians) == list):
+            degrees = []
+            for i in radians:
+                degrees.append(i*180.0/math.pi)
+            return degrees
+        elif(type(radians) == float):
+            return radians*180.0/math.pi
+        elif(type(radians) == int):
+            return float(radians)*180.0/math.pi
+        else:
+            return radians
     def __list_to_dat__(list,path):                 # 
         file = open(path,"w+")                      # 
         for item in list:                           # ToDo: make sure is white space delimited if Matrix
@@ -525,7 +530,7 @@ class System:
     
     # http://www.ccp14.ac.uk/ccp/web-mirrors/garlic/garlic/commands/dihedrals.html
     
-    def dihedral_phi(self, residue_index, chain_id):
+    def dihedral_phi(self, residue_index, chain_id="A"):
         s1 = self.select( atom_name="C"  , residue_number=residue_index-1 , chain_id=chain_id )     # Selection
         s2 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )     #
         s3 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )     #
@@ -537,7 +542,7 @@ class System:
                 print("Warning: Non-Unique Selection, Using First.")                                #
             return System.atom_dihedral(s1[0],s2[0],s3[0],s4[0])                                    # Return Dihedral
         
-    def dihedral_psi(self, residue_index, chain_id):
+    def dihedral_psi(self, residue_index, chain_id="A"):
         s1 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )     # Selection
         s2 = self.select( atom_name="CA" , residue_number=residue_index   , chain_id=chain_id )     #
         s3 = self.select( atom_name="C"  , residue_number=residue_index   , chain_id=chain_id )     #
@@ -549,7 +554,7 @@ class System:
                 print("Warning: Non-Unique Selection, Using First.")                                #
             return System.atom_dihedral(s1[0],s2[0],s3[0],s4[0])                                    # Return Dihedral
     
-    def dihedral_omega(self, residue_index, chain_id):
+    def dihedral_omega(self, residue_index, chain_id="A"):
         s1 = self.select( atom_name="CA" , residue_number=residue_index-1 , chain_id=chain_id )     # Selection
         s2 = self.select( atom_name="C"  , residue_number=residue_index-1 , chain_id=chain_id )     #
         s3 = self.select( atom_name="N"  , residue_number=residue_index   , chain_id=chain_id )     #
@@ -561,8 +566,65 @@ class System:
                 print("Warning: Non-Unique Selection, Using First.")                                #
             return System.atom_dihedral(s1[0],s2[0],s3[0],s4[0])                                    # Return Dihedral
         
-    
-    def get_residue(self, residue_index, chain_id):
+    # http://www.ccp14.ac.uk/ccp/web-mirrors/garlic/garlic/commands/dihedrals.html
+    def dihedral_chi1( self, residue_index, chain_id="A"):
+        s1 = self.select( atom_name="N"  , residue_number=residue_index, chain_id=chain_id )        # Selection
+        s2 = self.select( atom_name="CA" , residue_number=residue_index, chain_id=chain_id )        # 
+        s3 = self.select( atom_name="CB" , residue_number=residue_index, chain_id=chain_id )        # 
+        this_atom_name = ""
+        
+        if( s1==[] or s2==[] or s3==[]):                                                            # Verify Selection
+            print("Warning: Selection of None, returning None.")
+            return None                                                                             #
+        else:
+            this_residue_name = s2[0].residue_name
+            if(  this_residue_name == "ARG"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "ASN"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "ASP"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "CYS"):
+                this_atom_name = "SG"
+            elif(this_residue_name == "GLN"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "GLU"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "HIS"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "ILE"):
+                this_atom_name = "CG1"
+            elif(this_residue_name == "LEU"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "LYS"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "MET"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "PHE"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "PRO"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "SER"):
+                this_atom_name = "OG"
+            elif(this_residue_name == "THR"):
+                this_atom_name = "OG1"
+            elif(this_residue_name == "TRP"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "TYR"):
+                this_atom_name = "CG"
+            elif(this_residue_name == "VAL"):
+                this_atom_name = "CG1"
+            
+        s4 = self.select( atom_name=this_atom_name, residue_number=residue_index, chain_id=chain_id )   # 
+        if(s4 == [] or s4 == None):
+            print("Warning: Selection of None, returning None.")
+            return None  
+        
+        if( len(s1)>1 or  len(s2)>1 or len(s3)>1 or len(s4)>1):                                 #
+            print("Warning: Non-Unique Selection, Using First.")                                #
+        return System.atom_dihedral(s1[0],s2[0],s3[0],s4[0])                                    # Return Dihedral
+        
+    def get_residue(self, residue_index, chain_id="A"):
         s1 = self.select( atom_name="CA" , residue_number=residue_index , chain_id=chain_id )       # Selection
         if( s1==[] ):                                                                               # Verify Selection
             return None                                                                             #
@@ -571,7 +633,7 @@ class System:
                 print("Warning: Non-Unique Selection, Using First.")                                #
             return s1[0].residue_name                                                               # Return Dihedral
     
-    def residue_count(self, chain_id):
+    def residue_count(self, chain_id="A"):
         # Initial States                                                                                    # Initial States
         residue_count       = 0                                                                             #   Initial Residue Count
         last_residue_name   = ""                                                                            #   No Initial Residue
@@ -909,97 +971,11 @@ def pdb_ter_to_line(fields):
     return line
 
 if __name__ == "__main__":
-    print("Testing...\n")
-    x = System("4ncu.pdb")
-    
-    x.strip_water()
-    x.renumber_atoms()
-    x.renumber_residues()
+    pdb_path = os.path.abspath(sys.argv[1])     # Get PDB
+    x = System(pdb_path)
     x.reseq_chain()
-    #x.print_pdb("new.pdb")
+    x.print_pdb(pdb_path+"1")
     
-    path = "table.dat"
-    file = open(path,"w+")
-    
-    title_line = "{0:<9.9}{1:<9.9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}{11:<9.9}\n".format( "chain", "residue", "AA", "C-N","N-Ca","Ca-C", "<N","<Ca","<C", "omega","phi","psi")
-    file.write(title_line)
-    
-    phi_list = []
-    psi_list = []
-    res_list = []
-    
-    # Iterate over Alphabet                                         # Iterate over Alphabet 
-    for ascii in range(65, 91):                                     # Iterate over Ascii Uppercase 
-        letter = chr(ascii)
         
-        for residue_number in range(1,x.residue_count(letter)):
-            
-            # Bond Lengths
-            n_to_ca = x.distance_backbone_phi(     residue_number, letter)
-            ca_to_c = x.distance_backbone_psi(    residue_number, letter)
-            c_to_n  = x.distance_backbone_omega(     residue_number, letter)
-            
-            if(n_to_ca == None):
-                n_to_ca = "None"
-            else:
-                n_to_ca = round(n_to_ca,3)
-            if(ca_to_c == None):
-                ca_to_c = "None"
-            else:
-                ca_to_c = round(ca_to_c,3)
-            if(c_to_n == None):
-                c_to_n = "None"
-            else:
-                c_to_n = round(c_to_n,3)
-            
-            
-            # Angles
-            angle_n  = x.angle_backbone_n(  residue_number, letter )
-            angle_ca = x.backbone_angle_ca( residue_number, letter )
-            angle_co = x.backbone_angle_co( residue_number, letter )
-            
-            if(angle_n == None):
-                angle_n = "None"
-            else:
-                angle_n = round(angle_n,3)
-            if(angle_ca == None):
-                angle_ca = "None"
-            else:
-                angle_ca = round(angle_ca,3)
-            if(angle_co == None):
-                angle_co = "None"
-            else:
-                angle_co = round(angle_co,3)
-            
-            
-            # Dihedrals
-            phi = x.dihedral_phi(   residue_number, letter )
-            psi = x.dihedral_psi(   residue_number, letter )
-            omg = x.dihedral_omega( residue_number, letter )
-            
-            if(phi == None):
-                phi = "None"
-            else:
-                phi = round(phi,3)
-            if(psi == None):
-                psi = "None"
-            else:
-                psi = round(psi,3)
-            if(omg == None):
-                omg = "None"
-            else:
-                omg = round(omg,3)
-            
-            phi_list.append(phi)
-            psi_list.append(psi)
-            res = x.get_residue(residue_number, letter)
-            res_list.append(res)
-            
-            line = "{0:<9.9}{1:<9}{2:<9.9}{3:<9.9}{4:<9.9}{5:<9.9}{6:<9.9}{7:<9.9}{8:<9.9}{9:<9.9}{10:<9.9}{11:<9.9}\n".format( letter, residue_number, res, c_to_n, n_to_ca, ca_to_c, angle_n, angle_ca, angle_co, omg, phi, psi)
-            file.write(line)
-            
-    file.close()  
-    System.__list_to_dat__(phi_list,"phi.dat")
-    System.__list_to_dat__(psi_list,"psi.dat")
-    System.__list_to_dat__(res_list,"res.dat")
+        
     

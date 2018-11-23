@@ -1,0 +1,30 @@
+#puts -nonewline "\n \t \t Selection: "
+#gets stdin selmode
+
+# Set Your Variables!                                         # User Actions
+set in_pdb 1_protein
+set in_dcd 1_protein
+set out_name 2_protein
+
+# Load File
+mol load pdb ${in_pdb}.pdb dcd ${in_dcd}.dcd
+
+# selection
+
+set sel [atomselect top "protein"]
+set protein [atomselect top "protein"]
+set n [molinfo top get numframes]
+set output [open "$out_name.dat" w]
+
+
+
+# sasa calculation loop
+for {set i 0} {$i < $n} {incr i} {
+	molinfo top set frame $i
+	set sasa [measure sasa 1.4 $protein -restrict $sel]
+	puts "\t \t working: $i/$n"
+	puts $output "$sasa"
+}
+puts "\t \t Done: $n/$n"
+
+close $output

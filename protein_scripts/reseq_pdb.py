@@ -36,7 +36,7 @@ def reseq(pdb_path):                                                    # WARNIN
         fields = line.strip().split()                                   # Splits Columns
         if(fields[0] == "ATOM" or fields[0] == "HETATM"):               # Only Look at Atom Rows
             
-            atom_prop = pdb_pars.line_to_pdb_atom(line)                 # Covert to List
+            atom_prop = pars_pdb.line_to_pdb_atom(line)                 # Covert to List
             
             # Detect Change in Residue
             new_res_name  = atom_prop[4] != last_res_name                # Detect Residue Name    Change
@@ -67,13 +67,13 @@ def reseq(pdb_path):                                                    # WARNIN
             atom_prop[1] = str(atom_num)                                # Set new atom_num
             
             # Write PDB
-            new_line = pdb_pars.pdb_atom_to_line(atom_prop)             # Convert to String
+            new_line = pars_pdb.pdb_atom_to_line(atom_prop)             # Convert to String
             pdb_new.write(new_line+"\n")                                # Write Line to File
             
             
         elif(fields[0] == "TER"):
             
-            atom_prop = pdb_pars.line_to_pdb_ter(line)                  # Covert to List
+            atom_prop = pars_pdb.line_to_pdb_ter(line)                  # Covert to List
             
             # Detect Change in Residue
             new_res_name  = atom_prop[2] != last_res_name                # Detect Residue Name    Change
@@ -104,7 +104,7 @@ def reseq(pdb_path):                                                    # WARNIN
             chain_change  = False                                       # Reset Chain Change Signal
             
             # Write PDB
-            new_line = pdb_pars.pdb_ter_to_line(atom_prop)              # Convert to String
+            new_line = pars_pdb.pdb_ter_to_line(atom_prop)              # Convert to String
             pdb_new.write(new_line+"\n")                                # Write Line to File
             
             
