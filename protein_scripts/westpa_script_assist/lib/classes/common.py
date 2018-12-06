@@ -46,7 +46,7 @@ def fix_file_path(file_path):
         a = (len(file_path)-len(file_name))
         file_dir = file_path[:a]
     
-    return {"path":file_path,"name":file_name,"suffix":file_suffix,"dir":file_dir,"directory":file_dir}
+    return {"path":file_path,"name":file_name,"suffix":file_suffix,"type":file_suffix,"dir":file_dir,"directory":file_dir}
 
 def get_var_name(var_name,var_name_list,constant=False):
     
@@ -65,7 +65,7 @@ def get_var_name(var_name,var_name_list,constant=False):
     
     return var_name
 
-def strip_line_lead(lead,string):
+def strip_lead(lead,string):
     i = len(lead)
     string_array = string.split("\n")
     string = ""
